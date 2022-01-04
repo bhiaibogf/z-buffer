@@ -25,14 +25,7 @@ public:
 
     void Draw();
 
-    void Show() {
-        for (auto &pixel: depth_buffer_) {
-            pixel /= camera_.far();
-        }
-        cv::Mat image(height_, width_, CV_32FC1, depth_buffer_.data());
-        // image.convertTo(image, CV_8UC1);
-        cv::imshow("z-buffer", image);
-    }
+    void Show();
 
 private:
     std::vector<float> depth_buffer_;
@@ -40,18 +33,20 @@ private:
     int width_, height_;
     Camera camera_;
 
-    Triangle triangle_ = Triangle({{2,  0, -2},
-                                   {0,  2, -1},
-                                   {-2, 0, -2}});
+    Triangle triangle_ = Triangle({{2,  0, -40},
+                                   {0,  2, -2},
+                                   {-2, 0, -10}});
 
     int GetIdx(int x, int y) const;
 
-    static bool insideTriangle(float x, float y, const std::array<Eigen::Vector4f, 3> &_v);
+    static bool IsInsideTriangle(float x, float y, const std::array<Eigen::Vector4f, 3> &vertices);
 
-    static auto computeBarycentric2D(float x, float y, const std::array<Eigen::Vector4f, 3> &v);
+    static auto ComputeBarycentric2D(float x, float y, const std::array<Eigen::Vector4f, 3> &vertices);
 
     //Screen space rasterization
     void RasterizeTriangle(const Triangle &triangle);
+
+    float LinearizeDepth(float depth);
 
 };
 

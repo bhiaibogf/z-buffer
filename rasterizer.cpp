@@ -16,28 +16,35 @@ void Rasterizer::Draw() {
     // std::cout << triangle_ << std::endl;
     Triangle triangle(triangle_);
     camera_.Transform(triangle);
+    // std::cout << triangle << std::endl;
 
     //Viewport transformation
-    float f1 = (50 - 0.1) / 2.0;
-    float f2 = (50 + 0.1) / 2.0;
     for (auto &vertex: triangle.vertices()) {
         vertex.x() = 0.5f * float(width_) * (vertex.x() + 1);
         vertex.y() = 0.5f * float(height_) * (vertex.y() + 1);
-        // vertex.z() = -vertex.z() * f1 + f2;
+        vertex.z() = 0.5f * (vertex.z() + 1);
     }
-
     // std::cout << triangle << std::endl;
+
     RasterizeTriangle(triangle);
+}
+
+void Rasterizer::Show() {
+    for (auto &pixel: depth_buffer_) {
+        pixel = (LinearizeDepth(pixel) - camera_.near()) / (camera_.far() - camera_.near());
+    }
+    cv::Mat image(height_, width_, CV_32FC1, depth_buffer_.data());
+    cv::imshow("z-buffer", image);
 }
 
 int Rasterizer::GetIdx(int x, int y) const {
     return (height_ - y - 1) * width_ + x;
 }
 
-bool Rasterizer::insideTriangle(float x, float y, const std::array<Eigen::Vector4f, 3> &_v) {
+bool Rasterizer::IsInsideTriangle(float x, float y, const std::array<Eigen::Vector4f, 3> &vertices) {
     Eigen::Vector3f v[3];
     for (int i = 0; i < 3; i++)
-        v[i] = {_v[i].x(), _v[i].y(), 1.0};
+        v[i] = {vertices[i].x(), vertices[i].y(), 1.0};
     Eigen::Vector3f f0, f1, f2;
     f0 = v[1].cross(v[0]);
     f1 = v[2].cross(v[1]);
@@ -48,16 +55,22 @@ bool Rasterizer::insideTriangle(float x, float y, const std::array<Eigen::Vector
     return false;
 }
 
-auto Rasterizer::computeBarycentric2D(float x, float y, const std::array<Eigen::Vector4f, 3> &v) {
-    float c1 = (x * (v[1].y() - v[2].y()) + (v[2].x() - v[1].x()) * y + v[1].x() * v[2].y() - v[2].x() * v[1].y()) /
-               (v[0].x() * (v[1].y() - v[2].y()) + (v[2].x() - v[1].x()) * v[0].y() + v[1].x() * v[2].y() -
-                v[2].x() * v[1].y());
-    float c2 = (x * (v[2].y() - v[0].y()) + (v[0].x() - v[2].x()) * y + v[2].x() * v[0].y() - v[0].x() * v[2].y()) /
-               (v[1].x() * (v[2].y() - v[0].y()) + (v[0].x() - v[2].x()) * v[1].y() + v[2].x() * v[0].y() -
-                v[0].x() * v[2].y());
-    float c3 = (x * (v[0].y() - v[1].y()) + (v[1].x() - v[0].x()) * y + v[0].x() * v[1].y() - v[1].x() * v[0].y()) /
-               (v[2].x() * (v[0].y() - v[1].y()) + (v[1].x() - v[0].x()) * v[2].y() + v[0].x() * v[1].y() -
-                v[1].x() * v[0].y());
+auto Rasterizer::ComputeBarycentric2D(float x, float y, const std::array<Eigen::Vector4f, 3> &vertices) {
+    float c1 = (x * (vertices[1].y() - vertices[2].y()) + (vertices[2].x() - vertices[1].x()) * y +
+                vertices[1].x() * vertices[2].y() - vertices[2].x() * vertices[1].y()) /
+               (vertices[0].x() * (vertices[1].y() - vertices[2].y()) +
+                (vertices[2].x() - vertices[1].x()) * vertices[0].y() + vertices[1].x() * vertices[2].y() -
+                vertices[2].x() * vertices[1].y());
+    float c2 = (x * (vertices[2].y() - vertices[0].y()) + (vertices[0].x() - vertices[2].x()) * y +
+                vertices[2].x() * vertices[0].y() - vertices[0].x() * vertices[2].y()) /
+               (vertices[1].x() * (vertices[2].y() - vertices[0].y()) +
+                (vertices[0].x() - vertices[2].x()) * vertices[1].y() + vertices[2].x() * vertices[0].y() -
+                vertices[0].x() * vertices[2].y());
+    float c3 = (x * (vertices[0].y() - vertices[1].y()) + (vertices[1].x() - vertices[0].x()) * y +
+                vertices[0].x() * vertices[1].y() - vertices[1].x() * vertices[0].y()) /
+               (vertices[2].x() * (vertices[0].y() - vertices[1].y()) +
+                (vertices[1].x() - vertices[0].x()) * vertices[2].y() + vertices[0].x() * vertices[1].y() -
+                vertices[1].x() * vertices[0].y());
     return std::tuple(c1, c2, c3);
 }
 
@@ -84,9 +97,9 @@ void Rasterizer::RasterizeTriangle(const Triangle &triangle) {
     for (int x = min_x_; x <= max_x_; x++) {
         for (int y = min_y_; y <= max_y_; y++) {
             float xx = 0.5f + float(x), yy = 0.5f + float(y);
-            if (insideTriangle(xx, yy, triangle.vertices())) {
+            if (IsInsideTriangle(xx, yy, triangle.vertices())) {
                 // 插值
-                auto[alpha, beta, gamma] = computeBarycentric2D(xx, yy, triangle.vertices());
+                auto[alpha, beta, gamma] = ComputeBarycentric2D(xx, yy, triangle.vertices());
 
                 float w_interpolated_reciprocal =
                         alpha / vertices[0].w() + beta / vertices[1].w() + gamma / vertices[2].w();
@@ -97,9 +110,14 @@ void Rasterizer::RasterizeTriangle(const Triangle &triangle) {
 
                 if (z_interpolated < depth_buffer_[GetIdx(x, y)]) {
                     depth_buffer_[GetIdx(x, y)] = z_interpolated;
-                    // std::cout << x << ' ' << y << ' ' << z_interpolated / camera_.far() << std::endl;
                 }
             }
         }
     }
+}
+
+float Rasterizer::LinearizeDepth(float depth) {
+    float z = depth * 2.f - 1.f;// Back to NDC
+    return (2.f * camera_.near() * camera_.far()) /
+           (camera_.far() + camera_.near() - z * (camera_.far() - camera_.near()));
 }
