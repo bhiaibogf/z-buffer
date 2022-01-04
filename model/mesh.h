@@ -12,6 +12,8 @@
 
 class Mesh : public Object {
 public:
+    Mesh() = default;
+
     Mesh(const std::vector<Eigen::Vector3f> &vertices, const std::vector<Eigen::Vector3i> &triangles);
 
     ~Mesh() = default;
@@ -19,6 +21,14 @@ public:
     auto &vertices() { return vertices_; }
 
     const auto &vertices() const { return vertices_; }
+
+    void AddVertex(const Eigen::Vector3f &vertex) {
+        vertices_.emplace_back(vertex.x(), vertex.y(), vertex.z(), 1.0);
+    }
+
+    void AddFace(const Eigen::Vector3i &triangle) {
+        triangles_.emplace_back(triangle.x() - 1, triangle.y() - 1, triangle.z() - 1);
+    }
 
     void Transform(const Eigen::Matrix4f &mvp) override;
 

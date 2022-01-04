@@ -5,10 +5,12 @@
 #ifndef Z_BUFFER_OBJ_LOADER_H
 #define Z_BUFFER_OBJ_LOADER_H
 
+#include <fstream>
 
-class ObjLoader {
+#include "model/mesh.h"
 
-};
-
+namespace obj_loader {
+    Mesh LoadObj(const std::string &path);
+}
 
 #endif //Z_BUFFER_OBJ_LOADER_H
