@@ -9,27 +9,17 @@
 
 class Triangle : public Object {
 public:
-    Triangle(const Eigen::Vector3f &a, const Eigen::Vector3f &b, const Eigen::Vector3f &c) {
-        vertices_[0] = Eigen::Vector4f(a.x(), a.y(), a.z(), 1.0);
-        vertices_[1] = Eigen::Vector4f(b.x(), b.y(), b.z(), 1.0);
-        vertices_[2] = Eigen::Vector4f(c.x(), c.y(), c.z(), 1.0);
-    }
+    Triangle(const Eigen::Vector3f &a, const Eigen::Vector3f &b, const Eigen::Vector3f &c);
+
+    Triangle(const Eigen::Vector4f &a, const Eigen::Vector4f &b, const Eigen::Vector4f &c);
 
     ~Triangle() = default;
 
-    auto &vertices() {
-        return vertices_;
-    }
+    auto &vertices() { return vertices_; }
 
-    const auto &vertices() const {
-        return vertices_;
-    }
+    const auto &vertices() const { return vertices_; }
 
-    void Transform(const Eigen::Matrix4f &mvp) override {
-        for (auto &vertex: vertices_) {
-            vertex = mvp * vertex;
-        }
-    }
+    void Transform(const Eigen::Matrix4f &mvp) override;
 
     friend std::ostream &operator<<(std::ostream &output, const Triangle &triangle);
 

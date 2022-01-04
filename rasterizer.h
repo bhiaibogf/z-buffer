@@ -12,6 +12,7 @@
 
 #include "camera.h"
 #include "model/triangle.h"
+#include "model/mesh.h"
 
 class Rasterizer {
 public:
@@ -33,9 +34,17 @@ private:
     int width_, height_;
     Camera camera_;
 
-    Triangle triangle_ = Triangle({{2,  0, -40},
-                                   {0,  2, -2},
-                                   {-2, 0, -10}});
+    Mesh mesh_ = Mesh({
+                              {2,   0,   -2},
+                              {0,   2,   -2},
+                              {-2,  0,   -2},
+                              {3.5, -1,  -5},
+                              {2.5, 1.5, -5},
+                              {-1,  0.5, -5}
+                      }, {
+                              {0, 1, 2},
+                              {3, 4, 5}
+                      });
 
     int GetIdx(int x, int y) const;
 
