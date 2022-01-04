@@ -49,11 +49,10 @@ float Camera::Radius(float alpha) {
 }
 
 Eigen::Matrix4f Camera::Perspective(float fov, float aspect, float near, float far) {
-    float t = near * std::tan(Radius(fov / 2));
-    float r = t * aspect;
+    float cot = 1 / std::tan(Radius(fov / 2));
     Eigen::Matrix4f projection;
-    projection << near / r, 0, 0, 0,
-            0, near / t, 0, 0,
+    projection << cot / aspect, 0, 0, 0,
+            0, cot, 0, 0,
             0, 0, -(far + near) / (far - near), -2 * far * near / (far - near),
             0, 0, -1, 0;
     // std::cout << projection << std::endl;
