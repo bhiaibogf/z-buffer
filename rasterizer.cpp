@@ -11,7 +11,7 @@ Rasterizer::Rasterizer(int width, int height) : width_(width), height_(height) {
 }
 
 void Rasterizer::Clear() {
-    std::fill(depth_buffer_.begin(), depth_buffer_.end(), std::numeric_limits<float>::infinity());
+    std::fill(depth_buffer_.begin(), depth_buffer_.end(), 1.f);
 }
 
 void Rasterizer::Draw(const Camera &camera, const Mesh &_mesh) {
@@ -48,6 +48,9 @@ void Rasterizer::Draw(const Camera &camera, const Mesh &_mesh) {
 void Rasterizer::Show() {
     for (auto &pixel: depth_buffer_) {
         pixel = (LinearizeDepth(pixel) - near_) / (far_ - near_);
+        // if (pixel != 1) {
+        //     std::cout << pixel << std::endl;
+        // }
     }
     cv::Mat image(height_, width_, CV_32FC1, depth_buffer_.data());
     cv::imshow("z-buffer", image);
@@ -132,7 +135,7 @@ void Rasterizer::RasterizeTriangle(const Triangle &triangle) {
     }
 }
 
-float Rasterizer::LinearizeDepth(float depth) {
+float Rasterizer::LinearizeDepth(float depth) const {
     float z = depth * 2.f - 1.f;// Back to NDC
     return (2.f * near_ * far_) / (far_ + near_ - z * (far_ - near_));
 }

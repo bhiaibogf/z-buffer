@@ -41,7 +41,7 @@ private:
     //Screen space rasterization
     void RasterizeTriangle(const Triangle &triangle);
 
-    float LinearizeDepth(float depth);
+    float LinearizeDepth(float depth) const;
 
 };
 

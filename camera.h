@@ -31,8 +31,8 @@ private:
     Eigen::Matrix4f view_;
     Eigen::Matrix4f projection_;
 
-    static Eigen::Matrix4f LookAt(const Eigen::Vector3f &position,
-                                  const Eigen::Vector3f &look_at = Eigen::Vector3f(0, 0, 0),
+    static Eigen::Matrix4f LookAt(const Eigen::Vector3f &eye,
+                                  const Eigen::Vector3f &center = Eigen::Vector3f(0, 0, 0),
                                   const Eigen::Vector3f &up = Eigen::Vector3f(0, 1, 0));
 
     static float Radius(float alpha);

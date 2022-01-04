@@ -29,17 +29,29 @@ void Camera::Transform(Object &source_object) const {
     source_object.Transform(projection_ * view_ * source_object.model());
 }
 
-Eigen::Matrix4f Camera::LookAt(const Eigen::Vector3f &position,
-                               const Eigen::Vector3f &look_at, const Eigen::Vector3f &up) {
-    Eigen::Matrix4f view = Eigen::Matrix4f::Identity();
+Eigen::Matrix4f Camera::LookAt(const Eigen::Vector3f &eye,
+                               const Eigen::Vector3f &center, const Eigen::Vector3f &up) {
+#ifndef LEFT_HAND
+    Eigen::Vector3f f = (center - eye).normalized(),
+            s = f.cross(up).normalized(),
+            u = s.cross(f).normalized();
 
-    Eigen::Matrix4f translate;
-    translate << 1, 0, 0, -position[0],
-            0, 1, 0, -position[1],
-            0, 0, 1, -position[2],
-            0, 0, 0, 1;
+    Eigen::Matrix4f view;
+    view << s.x(), s.y(), s.z(), -s.dot(eye),
+            u.x(), u.y(), u.z(), -u.dot(eye),
+            -f.x(), -f.y(), -f.z(), f.dot(eye),
+            0.f, 0.f, 0.f, 1.f;
+#else
+    Eigen::Vector3f f = (center - eye).normalized(),
+            s = up.cross(f).normalized(),
+            u = f.cross(s).normalized();
 
-    view = translate * view;
+    Eigen::Matrix4f view;
+    view << s.x(), s.y(), s.z(), -s.dot(eye),
+            u.x(), u.y(), u.z(), -u.dot(eye),
+            f.x(), f.y(), f.z(), -f.dot(eye),
+            0.f, 0.f, 0.f, 1.f;
+#endif
 
     return view;
 }
