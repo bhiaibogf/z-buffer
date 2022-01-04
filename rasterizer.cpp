@@ -18,11 +18,20 @@ void Rasterizer::Draw() {
     camera_.Transform(triangle);
     // std::cout << triangle << std::endl;
 
-    //Viewport transformation
+    // Homogeneous division
+    for (auto &vertex: triangle.vertices()) {
+        vertex.x() /= vertex.w();
+        vertex.y() /= vertex.w();
+        vertex.z() /= vertex.w();
+    }
+    // std::cout << triangle << std::endl;
+
+    // Viewport transformation
     for (auto &vertex: triangle.vertices()) {
         vertex.x() = 0.5f * float(width_) * (vertex.x() + 1);
         vertex.y() = 0.5f * float(height_) * (vertex.y() + 1);
-        vertex.z() = 0.5f * (vertex.z() + 1);
+        // no need
+        // vertex.z() = 0.5f * (vertex.z() + 1);
     }
     // std::cout << triangle << std::endl;
 

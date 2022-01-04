@@ -26,11 +26,8 @@ public:
     }
 
     void Transform(const Eigen::Matrix4f &mvp) override {
-        for (int i = 0; i < 3; i++) {
-            vertices_[i] = mvp * vertices_[i];
-
-            //Homogeneous division
-            vertices_[i] /= vertices_[i].w();
+        for (auto &vertex: vertices_) {
+            vertex = mvp * vertex;
         }
     }
 
