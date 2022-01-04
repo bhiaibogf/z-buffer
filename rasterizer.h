@@ -20,11 +20,9 @@ public:
 
     ~Rasterizer() = default;
 
-    auto &camera() { return camera_; }
-
     void Clear();
 
-    void Draw();
+    void Draw(const Camera &camera, const Mesh &_mesh);
 
     void Show();
 
@@ -32,19 +30,7 @@ private:
     std::vector<float> depth_buffer_;
 
     int width_, height_;
-    Camera camera_;
-
-    Mesh mesh_ = Mesh({
-                              {2,   0,   -2},
-                              {0,   2,   -2},
-                              {-2,  0,   -2},
-                              {3.5, -1,  -5},
-                              {2.5, 1.5, -5},
-                              {-1,  0.5, -5}
-                      }, {
-                              {0, 1, 2},
-                              {3, 4, 5}
-                      });
+    float near_, far_;
 
     int GetIdx(int x, int y) const;
 

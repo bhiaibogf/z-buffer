@@ -5,21 +5,48 @@
 #include "rasterizer.h"
 
 int main(int argc, const char **argv) {
-    Rasterizer rasterizer(1280, 720);
+    Rasterizer rasterizer(512, 512);
 
-    Eigen::Vector3f eye_pos = {0, 0, 5};
+    Eigen::Vector3f eye_pos = {0, 0, 10};
+    Camera camera;
+
+    Mesh mesh = Mesh({
+                             {2,   0,   -2},
+                             {0,   2,   -2},
+                             {-2,  0,   -2},
+                             {3.5, -1,  -5},
+                             {2.5, 1.5, -5},
+                             {-1,  0.5, -5}
+                     }, {
+                             {0, 1, 2},
+                             {3, 4, 5}
+                     });
+
+    Eigen::Matrix4f scale;
+    scale << 2.5, 0, 0, 0,
+            0, 2.5, 0, 0,
+            0, 0, 2.5, 0,
+            0, 0, 0, 1;
+
+    Eigen::Matrix4f rotation = Eigen::Matrix4f::Identity();
+
+    Eigen::Matrix4f translate;
+    translate << 1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1;
 
     int key = 0;
     int frame_count = 0;
     while (key != 27) {
         rasterizer.Clear();
 
-        // r.set_model(get_model_matrix(angle));
-        // r.set_model(get_rotation(Vector3f(1, 1, 1), angle));
-        rasterizer.camera().set_view(eye_pos);
-        rasterizer.camera().set_projection(45, 1, 0.1, 50);
+        mesh.set_model(translate * rotation * scale);
 
-        rasterizer.Draw();
+        camera.set_view(eye_pos);
+        camera.set_projection(45, 1, 0.1, 50);
+
+        rasterizer.Draw(camera, mesh);
         rasterizer.Show();
         key = cv::waitKey(10);
 
