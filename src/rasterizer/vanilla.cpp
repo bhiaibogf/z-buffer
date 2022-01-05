@@ -12,33 +12,8 @@ void Vanilla::Clear() {
     std::fill(depth_buffer_.begin(), depth_buffer_.end(), 1.f);
 }
 
-void Vanilla::Draw(const Camera &camera, const Mesh &_mesh) {
-    near_ = camera.near();
-    far_ = camera.far();
-
-    // std::cout << mesh_ << std::endl;
-    Mesh mesh(_mesh);
-    camera.Transform(mesh);
-    // std::cout << mesh << std::endl;
-
-    // Homogeneous division
-    for (auto &vertex: mesh.vertices()) {
-        vertex.x() /= vertex.w();
-        vertex.y() /= vertex.w();
-        vertex.z() /= vertex.w();
-    }
-    // std::cout << mesh << std::endl;
-
-    // Viewport transformation
-    for (auto &vertex: mesh.vertices()) {
-        vertex.x() = 0.5f * float(width_) * (vertex.x() + 1);
-        vertex.y() = 0.5f * float(height_) * (vertex.y() + 1);
-        // no need
-        // vertex.z() = 0.5f * (vertex.z() + 1);
-    }
-    // std::cout << mesh << std::endl;
-
-    for (auto &triangle: mesh.Triangles()) {
+void Vanilla::FragmentShader() {
+    for (auto &triangle: mesh_.Triangles()) {
         RasterizeTriangle(triangle);
     }
 }

@@ -24,7 +24,7 @@ public:
 
     void Clear() override;
 
-    void Draw(const Camera &camera, const Mesh &_mesh) override;
+    void FragmentShader() override;
 
     void Show() override;
 
