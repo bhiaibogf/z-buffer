@@ -5,9 +5,10 @@
 #ifndef Z_BUFFER_CAMERA_H
 #define Z_BUFFER_CAMERA_H
 
+
 #include <eigen3/Eigen/Eigen>
 
-#include "model/object.h"
+#include "../object/object.h"
 
 class Camera {
 public:

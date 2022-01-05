@@ -5,14 +5,15 @@
 #ifndef Z_BUFFER_RASTERIZER_H
 #define Z_BUFFER_RASTERIZER_H
 
+
 #include <vector>
 
 #include <opencv2/opencv.hpp>
 #include <eigen3/Eigen/Core>
 
-#include "camera.h"
-#include "model/triangle.h"
-#include "model/mesh.h"
+#include "../utils/camera.h"
+#include "../object/triangle.h"
+#include "../object/mesh.h"
 
 class Rasterizer {
 public:

@@ -5,6 +5,7 @@
 #ifndef Z_BUFFER_TRIANGLE_H
 #define Z_BUFFER_TRIANGLE_H
 
+
 #include "object.h"
 
 class Triangle : public Object {
