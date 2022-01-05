@@ -9,3 +9,5 @@ find_package(OpenCV REQUIRED)
 
 add_executable(z_buffer ${SRC})
 target_link_libraries(z_buffer ${OpenCV_LIBRARIES})
+
+#add_executable(test test/main.cpp)
