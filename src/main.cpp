@@ -5,10 +5,10 @@
 #include "utils/transformer.h"
 #include "utils/obj_loader.h"
 #include "object/mesh.h"
-#include "rasterizer/rasterizer.h"
+#include "rasterizer/vanilla.h"
 
 int main(int argc, const char **argv) {
-    Rasterizer rasterizer(512, 512);
+    Vanilla rasterizer(512, 512);
 
     Eigen::Vector3f eye_pos = {0, 0, 4};
     Camera camera;

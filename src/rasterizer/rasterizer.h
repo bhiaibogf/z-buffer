@@ -6,13 +6,7 @@
 #define Z_BUFFER_RASTERIZER_H
 
 
-#include <vector>
-
-#include <opencv2/opencv.hpp>
-#include <eigen3/Eigen/Core>
-
 #include "../utils/camera.h"
-#include "../object/triangle.h"
 #include "../object/mesh.h"
 
 class Rasterizer {
@@ -21,26 +15,15 @@ public:
 
     ~Rasterizer() = default;
 
-    void Clear();
+    virtual void Clear() = 0;
 
-    void Draw(const Camera &camera, const Mesh &_mesh);
+    virtual void Draw(const Camera &camera, const Mesh &_mesh) = 0;
 
-    void Show();
+    virtual void Show() = 0;
 
-private:
-    std::vector<float> depth_buffer_;
-
+protected:
     int width_, height_;
     float near_, far_;
-
-    int GetIdx(int x, int y) const;
-
-    static bool IsInsideTriangle(float x, float y, const std::array<Eigen::Vector4f, 3> &vertices);
-
-    static auto ComputeBarycentric2D(float x, float y, const std::array<Eigen::Vector4f, 3> &vertices);
-
-    //Screen space rasterization
-    void RasterizeTriangle(const Triangle &triangle);
 
     float LinearizeDepth(float depth) const;
 
