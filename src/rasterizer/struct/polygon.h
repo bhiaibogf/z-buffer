@@ -6,9 +6,24 @@
 #define Z_BUFFER_POLYGON_H
 
 
+#include <vector>
+
+#include "active_edge.h"
+
 class Polygon {
 public:
-private:
+    void Update() {
+        dy_--;
+    }
+
+    bool NeedDeleted() const {
+        return dy_ < 0;
+    }
+
+    std::vector<ActiveEdge> Edge() {
+        // TODO
+    }
+
     float a_, b_, c_, d_;
     int id_;
     int dy_;

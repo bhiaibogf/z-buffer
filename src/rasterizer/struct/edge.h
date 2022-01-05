@@ -8,7 +8,6 @@
 
 class Edge {
 public:
-private:
     float x_;
     float dx_;
     int dy_;

@@ -6,9 +6,11 @@
 #include "utils/obj_loader.h"
 #include "object/mesh.h"
 #include "rasterizer/vanilla.h"
+#include "rasterizer/scan_line.h"
 
 int main(int argc, const char **argv) {
-    Vanilla rasterizer(512, 512);
+    // Vanilla rasterizer(512, 512);
+    ScanLine rasterizer(512, 512);
 
     Eigen::Vector3f eye_pos = {0, 0, 4};
     Camera camera;
