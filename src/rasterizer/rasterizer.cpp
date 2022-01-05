@@ -37,7 +37,7 @@ void Rasterizer::VertexShader(const Camera &camera, const Mesh &mesh) {
         vertex.x() = 0.5f * float(width_) * (vertex.x() + 1);
         vertex.y() = 0.5f * float(height_) * (vertex.y() + 1);
         // no need
-        // vertex.z() = 0.5f * (vertex.z() + 1);
+        vertex.z() = 0.5f * (vertex.z() + 1);
     }
     // std::cout << mesh_ << std::endl;
 }
