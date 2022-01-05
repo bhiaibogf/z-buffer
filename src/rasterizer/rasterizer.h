@@ -5,6 +5,10 @@
 #ifndef Z_BUFFER_RASTERIZER_H
 #define Z_BUFFER_RASTERIZER_H
 
+#include <vector>
+
+#include <opencv2/opencv.hpp>
+#include <eigen3/Eigen/Core>
 
 #include "../utils/camera.h"
 #include "../object/mesh.h"
@@ -23,13 +27,18 @@ public:
 
     void Draw(const Camera &camera, const Mesh &mesh);
 
-    virtual void Show() = 0;
+    void Show();
 
 protected:
     int width_, height_;
     float near_, far_;
 
     Mesh mesh_;
+
+    std::vector<float> depth_buffer_;
+    std::vector<float> fragment_buffer_;
+
+    int GetIdx(int x, int y) const;
 
     float LinearizeDepth(float depth) const;
 

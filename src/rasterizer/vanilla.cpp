@@ -16,21 +16,7 @@ void Vanilla::FragmentShader() {
     for (auto &triangle: mesh_.Triangles()) {
         RasterizeTriangle(triangle);
     }
-}
-
-void Vanilla::Show() {
-    for (auto &pixel: depth_buffer_) {
-        pixel = (LinearizeDepth(pixel) - near_) / (far_ - near_);
-        // if (pixel != 1) {
-        //     std::cout << pixel << std::endl;
-        // }
-    }
-    cv::Mat image(height_, width_, CV_32FC1, depth_buffer_.data());
-    cv::imshow("z-buffer", image);
-}
-
-int Vanilla::GetIdx(int x, int y) const {
-    return (height_ - y - 1) * width_ + x;
+    fragment_buffer_ = depth_buffer_;
 }
 
 bool Vanilla::IsInsideTriangle(float x, float y, const std::array<Eigen::Vector4f, 3> &vertices) {
