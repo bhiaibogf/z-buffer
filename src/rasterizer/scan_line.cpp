@@ -77,17 +77,24 @@ void ScanLine::FragmentShader() {
 }
 
 void ScanLine::CreatTable() {
+    int polygon_cnt = 0, edge_cnt = 0;
     for (auto &triangle: mesh_.Triangles()) {
         Polygon polygon(triangle);
-        polygon_list_[polygon.min_y()].push_back(polygon);
-        auto &vertices = triangle.vertices();
-        for (int i = 0; i < vertices.size(); i++) {
-            Edge edge(polygon.id(), vertices[i], vertices[(i + 1) % vertices.size()]);
-            if (edge.NeedDraw()) {
-                edge_list_[edge.min_y()].push_back(edge);
+        if (polygon.NeedDraw()) {
+            polygon_list_[polygon.min_y()].push_back(polygon);
+            polygon_cnt++;
+            auto &vertices = triangle.vertices();
+            for (int i = 0; i < vertices.size(); i++) {
+                Edge edge(polygon.id(), vertices[i], vertices[(i + 1) % vertices.size()]);
+                if (edge.NeedDraw()) {
+                    edge_list_[edge.min_y()].push_back(edge);
+                    edge_cnt++;
+                }
             }
         }
     }
+    std::cout << polygon_cnt << std::endl;
+    std::cout << edge_cnt << std::endl;
 }
 
 void ScanLine::UpdateActiveEdgeList() {
