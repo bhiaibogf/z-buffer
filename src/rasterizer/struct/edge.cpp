@@ -21,5 +21,5 @@ Edge::Edge(int id, const Eigen::Vector4f &vertex_0, const Eigen::Vector4f &verte
 void Edge::CopyToActiveEdge(float &x, float &dx, int &line) const {
     x = vertex_.x();
     dx = dx_;
-    line = line_;
+    line = line_-1;
 }
