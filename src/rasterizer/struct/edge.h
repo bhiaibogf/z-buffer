@@ -22,6 +22,8 @@ public:
 
     int min_y() const { return int(vertex_.y()); }
 
+    bool NeedDraw() { return line_ > 0; }
+
     float z() const { return vertex_.z(); }
 
     void CopyToActiveEdge(float &x, float &dx, int &line) const;

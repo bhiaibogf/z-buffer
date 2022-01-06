@@ -83,7 +83,9 @@ void ScanLine::CreatTable() {
         auto &vertices = triangle.vertices();
         for (int i = 0; i < vertices.size(); i++) {
             Edge edge(polygon.id(), vertices[i], vertices[(i + 1) % vertices.size()]);
-            edge_list_[edge.min_y()].push_back(edge);
+            if (edge.NeedDraw()) {
+                edge_list_[edge.min_y()].push_back(edge);
+            }
         }
     }
 }
