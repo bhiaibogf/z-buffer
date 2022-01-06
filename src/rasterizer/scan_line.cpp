@@ -30,38 +30,36 @@ void ScanLine::FragmentShader() {
     for (int y = 0; y < height_; y++) {
         std::fill(depth_buffer_.begin(), depth_buffer_.end(), 1.f);
 
-        std::set<int> ids;
-        for (auto iter = active_edge_list_.begin(); iter != active_edge_list_.end();) {
-            if (iter->NeedDeleted()) {
-                ids.insert(iter->id_);
-                iter = active_edge_list_.erase(iter);
-            } else {
-                iter++;
-            }
-        }
-
-        for (auto &item: polygon_list_[y]) {
-            active_polygon_list_.push_back(item);// TODO
-            ids.insert(item.id_);
-        }
-
-        for (auto &item: active_polygon_list_) {
-            if (ids.find(item.id_) != ids.end()) {
-                for (auto &edge: item.Edge()) {
-                    if (edge.IsActive(y)) {
-                        active_edge_list_.push_back(edge);// TODO
+        for (auto &active_edge: active_edge_list_) {
+            if (active_edge.NeedUpdate()) {
+                for (auto &edge: edge_list_[y]) {
+                    if (edge.id() == active_edge.id()) {
+                        active_edge.UpdateEdge(edge);
                     }
                 }
             }
         }
 
-        for (auto &edge: active_edge_list_) {
-            float z = -2;
-            for (int x = edge.x_l_; x <= edge.x_r_; x++) {
-                if (z == -2) {
-                    z = edge.z_l_;
+        for (auto &polygon: polygon_list_[y]) {
+            active_polygon_list_.push_back(polygon);
+            Edge active_edges[2];
+            int cnt = 0;
+            for (auto &edge: edge_list_[y]) {
+                if (edge.id() == polygon.id()) {
+                    active_edges[cnt++] = edge;
+                }
+            }
+            // assert(cnt == 2);
+            active_edge_list_.emplace_back(active_edges[0], active_edges[1]);
+        }
+
+        for (auto &active_edge: active_edge_list_) {
+            float z = 1;
+            for (int x = active_edge.l(); x <= active_edge.r(); x++) {
+                if (z == 1) {
+                    z = active_edge.z();
                 } else {
-                    z += edge.d_z_x_;
+                    z += active_edge.dz();
                 }
                 if (z < depth_buffer_[x]) {
                     depth_buffer_[x] = z;
@@ -79,12 +77,23 @@ void ScanLine::FragmentShader() {
 }
 
 void ScanLine::CreatTable() {
-    // TODO
+    for (auto &triangle: mesh_.Triangles()) {
+        Polygon polygon(triangle);
+        polygon_list_[polygon.min_y()].push_back(polygon);
+        for (auto &edge: polygon.Edges()) {
+            edge_list_[edge.min_y()].push_back(edge);
+        }
+    }
 }
 
 void ScanLine::UpdateActiveEdgeList() {
-    for (auto &edge: active_edge_list_) {
-        edge.Update();
+    for (auto iter = active_edge_list_.begin(); iter != active_edge_list_.end();) {
+        iter->Update();
+        if (iter->NeedDeleted()) {
+            iter = active_edge_list_.erase(iter);
+        } else {
+            iter++;
+        }
     }
 }
 

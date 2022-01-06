@@ -6,6 +6,8 @@
 #define Z_BUFFER_SCAN_LINE_H
 
 
+#include <cassert>
+
 #include "rasterizer.h"
 #include "struct/polygon.h"
 #include "struct/edge.h"

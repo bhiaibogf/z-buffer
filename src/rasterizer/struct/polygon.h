@@ -7,26 +7,39 @@
 
 
 #include <vector>
+#include <limits>
 
+#include "../../object/triangle.h"
 #include "active_edge.h"
 
 class Polygon {
 public:
-    void Update() {
-        dy_--;
-    }
+    explicit Polygon(const Triangle &triangle);
 
-    bool NeedDeleted() const {
-        return dy_ < 0;
-    }
+    ~Polygon() = default;
 
-    std::vector<ActiveEdge> Edge() {
-        // TODO
-    }
+    int id() const { return id_; }
+
+    int min_y() const { return min_y_; }
+
+    void Update() { line_--; }
+
+    bool NeedDeleted() const { return line_ < 0; }
+
+    std::vector<Edge> Edges();
+
+private:
+    static int id_cnt_;
+
+    int id_;
 
     float a_, b_, c_, d_;
-    int id_;
-    int dy_;
+
+    float min_y_;
+
+    int line_;
+
+    static Eigen::Vector4f TriangleToPlane(const Triangle &triangle);
 
 };
 

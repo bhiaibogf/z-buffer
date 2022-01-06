@@ -6,28 +6,39 @@
 #define Z_BUFFER_ACTIVE_EDGE_H
 
 
+#include "edge.h"
+
 class ActiveEdge {
 public:
-    void Update() {
-        d_y_l_--;
-        d_y_r_--;
-        x_l_ += d_x_l_;
-        x_r_ += d_x_r_;
-        z_l_ += d_z_x_ * d_x_l_ + d_z_y_; // seems wrong
-    }
+    ActiveEdge(const Edge &edge_1, const Edge &edge_2);
 
-    bool NeedDeleted() const {
-        return d_y_l_ < 0 || d_y_r_ < 0;
-    }
+    int id() { return id_; }
 
-    bool IsActive(int y) const {
-        return true; // TODO
-    }
+    int l() const { return int(x_l_); }
 
-    float x_l_, d_x_l_, d_y_l_;
-    float x_r_, d_x_r_, d_y_r_;
-    float z_l_, d_z_x_, d_z_y_;
+    int r() const { return int(x_r_); }
+
+    float z() const { return z_l_; }
+
+    float dz() const { return dz_x_; }
+
+    void Update();
+
+    bool NeedUpdate() const { return line_l_ < 0 || line_r_ < 0; }
+
+    bool NeedDeleted() const { return line_l_ < 0 && line_r_ < 0; }
+
+    void UpdateEdge(const Edge &edge);
+
+private:
     int id_;
+
+    int line_l_ = -1, line_r_ = -1;
+
+    float x_l_, dx_l_;
+    float x_r_, dx_r_;
+
+    float z_l_, dz_x_, dz_y_;
 
 };
 
