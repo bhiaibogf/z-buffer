@@ -12,7 +12,7 @@ class ActiveEdge {
 public:
     ActiveEdge(const Edge &edge_1, const Edge &edge_2, const Eigen::Vector3f &normal);
 
-    int id() { return id_; }
+    int id() const { return id_; }
 
     int l() const { return int(x_l_); }
 

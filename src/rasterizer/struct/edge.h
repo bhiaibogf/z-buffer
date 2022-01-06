@@ -16,7 +16,7 @@ public:
 
     ~Edge() = default;
 
-    bool operator<(const Edge &edge) const { return dx_ < edge.dx_; }
+    bool operator<(const Edge &edge) const;
 
     int id() const { return id_; }
 
