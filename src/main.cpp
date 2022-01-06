@@ -22,21 +22,21 @@ int main(int argc, const char **argv) {
     //                trans_former::GetScale(1.5, 1.5, 1.5));
 
     // bunny
-    Mesh mesh = obj_loader::LoadObj("model/bunny/bunny.obj");
-    mesh.set_model(trans_former::GetTranslation(0, -1, 0) *
-                   trans_former::GetRotation(15) *
-                   trans_former::GetScale(10, 10, 10));
+    // Mesh mesh = obj_loader::LoadObj("model/bunny/bunny.obj");
+    // mesh.set_model(trans_former::GetTranslation(0, -1, 0) *
+    //                trans_former::GetRotation(15) *
+    //                trans_former::GetScale(10, 10, 10));
 
     // two triangles
-    // Mesh mesh = Mesh({{2,   0,   -2},
-    //                   {0,   2,   -2},
-    //                   {-2,  0,   -2},
-    //                   {3.5, -1,  -5},
-    //                   {2.5, 1.5, -5},
-    //                   {-1,  0.5, -5}},
-    //                  {{0, 1, 2},
-    //                   {3, 4, 5}});
-    // mesh.set_model(trans_former::GetScale(0.5, 0.5, 0.2));
+    Mesh mesh = Mesh({{2,   0,   -2},
+                      {0,   2,   -2},
+                      {-2,  0,   -2},
+                      {3.5, -1,  -5},
+                      {2.5, 1.5, -5},
+                      {-1,  0.5, -5}},
+                     {{0, 1, 2},
+                      {3, 4, 5}});
+    mesh.set_model(trans_former::GetScale(0.5, 0.5, 0.2));
 
     // std::cout << mesh;
 

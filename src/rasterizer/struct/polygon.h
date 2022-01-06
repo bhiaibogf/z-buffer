@@ -22,24 +22,24 @@ public:
 
     int min_y() const { return min_y_; }
 
+    Eigen::Vector3f normal() const { return normal_; }
+
     void Update() { line_--; }
 
     bool NeedDeleted() const { return line_ < 0; }
-
-    std::vector<Edge> Edges();
 
 private:
     static int id_cnt_;
 
     int id_;
 
-    float a_, b_, c_, d_;
+    Eigen::Vector3f normal_;
 
     float min_y_;
 
     int line_;
 
-    static Eigen::Vector4f TriangleToPlane(const Triangle &triangle);
+    static Eigen::Vector3f TriangleToPlane(const Triangle &triangle);
 
 };
 

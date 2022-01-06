@@ -4,7 +4,7 @@
 
 #include "active_edge.h"
 
-ActiveEdge::ActiveEdge(const Edge &edge_1, const Edge &edge_2) {
+ActiveEdge::ActiveEdge(const Edge &edge_1, const Edge &edge_2, const Eigen::Vector3f &normal) {
     id_ = edge_1.id();
     if (edge_1 < edge_2) {
         UpdateEdge(edge_1);
@@ -13,6 +13,8 @@ ActiveEdge::ActiveEdge(const Edge &edge_1, const Edge &edge_2) {
         UpdateEdge(edge_2);
         UpdateEdge(edge_1);
     }
+    dz_x_ = -normal.x() / normal.z();
+    dz_y_ = -normal.y() / normal.z();
 }
 
 void ActiveEdge::Update() {
@@ -26,7 +28,7 @@ void ActiveEdge::Update() {
 void ActiveEdge::UpdateEdge(const Edge &edge) {
     if (line_l_ < 0) {
         edge.CopyToActiveEdge(x_l_, dx_l_, line_l_);
-        z_l_ = 1; // TODO
+        z_l_ = edge.z();
     } else {
         edge.CopyToActiveEdge(x_r_, dx_r_, line_r_);
     }

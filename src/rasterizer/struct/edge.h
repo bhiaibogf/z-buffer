@@ -6,24 +6,32 @@
 #define Z_BUFFER_EDGE_H
 
 
+#include <eigen3/Eigen/Core>
+
 class Edge {
 public:
-    Edge();
+    Edge() = default;
+
+    Edge(int id, const Eigen::Vector4f &vertex_0, const Eigen::Vector4f &vertex_1);
 
     ~Edge() = default;
 
-    bool operator<(const Edge &edge) const { return x_ < edge.x_; }
+    bool operator<(const Edge &edge) const { return vertex_.x() < edge.vertex_.x(); }
 
     int id() const { return id_; }
 
-    int min_y() const { return int(min_y_); }
+    int min_y() const { return int(vertex_.y()); }
+
+    float z() const { return vertex_.z(); }
 
     void CopyToActiveEdge(float &x, float &dx, int &line) const;
 
 private:
     int id_;
 
-    float x_, dx_, min_y_;
+    Eigen::Vector4f vertex_;
+
+    float dx_;
 
     int line_;
 

@@ -10,7 +10,7 @@
 
 class ActiveEdge {
 public:
-    ActiveEdge(const Edge &edge_1, const Edge &edge_2);
+    ActiveEdge(const Edge &edge_1, const Edge &edge_2, const Eigen::Vector3f &normal);
 
     int id() { return id_; }
 
