@@ -24,6 +24,8 @@ public:
 
     Eigen::Vector3f normal() const { return normal_; }
 
+    static void Reset() { id_cnt_ = 0; }
+
     bool NeedDraw() { return line_ > 0; }
 
     void Update() { line_--; }

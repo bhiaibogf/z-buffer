@@ -51,6 +51,7 @@ void Rasterizer::Show() {
     }
     cv::Mat image(height_, width_, CV_32FC1, fragment_buffer_.data());
     cv::imshow("z-buffer", image);
+    // cv::imwrite("z-buffer.exr", image);
 }
 
 int Rasterizer::GetIdx(int x, int y) const {

@@ -54,6 +54,12 @@ void ScanLine::FragmentShader() {
         }
 
         for (auto &active_edge: active_edge_list_) {
+            // debug cube (edge rank wrong when creating active edge)
+            // if (y == 175) {
+            //     if (active_edge.id() == 4) {
+            //         std::cout << active_edge.l() << ' ' << active_edge.r() << std::endl;
+            //     }
+            // }
             float z = 1;
             for (int x = active_edge.l(); x <= active_edge.r(); x++) {
                 if (z == 1) {
@@ -77,24 +83,29 @@ void ScanLine::FragmentShader() {
 }
 
 void ScanLine::CreatTable() {
-    int polygon_cnt = 0, edge_cnt = 0;
+    Polygon::Reset();
+
+    // int polygon_cnt = 0, edge_cnt = 0;
     for (auto &triangle: mesh_.Triangles()) {
         Polygon polygon(triangle);
         if (polygon.NeedDraw()) {
             polygon_list_[polygon.min_y()].push_back(polygon);
-            polygon_cnt++;
+            // polygon_cnt++;
             auto &vertices = triangle.vertices();
             for (int i = 0; i < vertices.size(); i++) {
                 Edge edge(polygon.id(), vertices[i], vertices[(i + 1) % vertices.size()]);
                 if (edge.NeedDraw()) {
                     edge_list_[edge.min_y()].push_back(edge);
-                    edge_cnt++;
+                    // edge_cnt++;
                 }
             }
         }
     }
-    std::cout << polygon_cnt << std::endl;
-    std::cout << edge_cnt << std::endl;
+    // std::cout << polygon_cnt << std::endl;
+    // std::cout << edge_cnt << std::endl;
+
+    active_polygon_list_.clear();
+    active_edge_list_.clear();
 }
 
 void ScanLine::UpdateActiveEdgeList() {
