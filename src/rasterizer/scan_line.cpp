@@ -46,15 +46,20 @@ void ScanLine::FragmentShader() {
 
         for (auto &polygon: polygon_table_[y]) {
             active_polygon_list_.push_back(polygon);
-            Edge active_edges[2];
+            Edge active_edges[3];
             int cnt = 0;
             for (auto &edge: edge_table_[y]) {
                 if (edge.id() == polygon.id()) {
                     active_edges[cnt++] = edge;
                 }
             }
-            assert(cnt == 2);
-            active_edge_list_.emplace_back(active_edges[0], active_edges[1], polygon.normal());
+            if (cnt == 2) {
+                active_edge_list_.emplace_back(active_edges[0], active_edges[1], polygon.normal());
+            } else if (cnt == 3) {
+                active_edge_list_.emplace_back(active_edges[0], active_edges[1], active_edges[2], polygon.normal());
+            } else {
+                assert(false);
+            }
         }
 
         for (auto &active_edge: active_edge_list_) {
@@ -101,7 +106,7 @@ void ScanLine::CreatTable() {
             auto &vertices = triangle.vertices();
             for (int i = 0; i < vertices.size(); i++) {
                 Edge edge(polygon.id(), vertices[i], vertices[(i + 1) % vertices.size()]);
-                if (edge.NeedDraw(height_)) {
+                if (polygon.InLine() || edge.NeedDraw(height_)) {
                     edge_table_[edge.min_y()].push_back(edge);
                     // edge_cnt++;
                 }

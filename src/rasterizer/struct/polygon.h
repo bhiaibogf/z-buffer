@@ -26,7 +26,9 @@ public:
 
     static void Reset() { id_cnt_ = 0; }
 
-    bool NeedDraw(int height) const { return line_ > 0 && min_y() < height; }
+    bool NeedDraw(int height) const { return line_ >= 0 && min_y() < height; }
+
+    bool InLine() const { return line_ == 0; }
 
     void Update() { line_--; }
 
