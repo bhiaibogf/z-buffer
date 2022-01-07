@@ -16,7 +16,10 @@ public:
 
     Camera(const Eigen::Vector3f &position, float fov, float aspect, float near, float far);
 
-    void set_view(const Eigen::Vector3f &position);
+    void set_view(const Eigen::Vector3f &position,
+                  const Eigen::Vector3f &center = Eigen::Vector3f(0, 0, 0),
+                  const Eigen::Vector3f &up = Eigen::Vector3f(0, 1, 0));
+
 
     void set_projection(float fov, float aspect, float near, float far);
 

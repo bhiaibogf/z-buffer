@@ -12,7 +12,7 @@ int main(int argc, const char **argv) {
     // Vanilla rasterizer(512, 512);
     ScanLine rasterizer(512, 512);
 
-    Eigen::Vector3f eye_pos = {0, 0, 4};
+    Eigen::Vector4f eye_pos = {0, 0, 4, 1};
     Camera camera;
 
     // spot
@@ -48,10 +48,13 @@ int main(int argc, const char **argv) {
 
     int key = 0;
     int frame_count = 0;
+    float angle_y = 0, z_translation = 0;
     while (key != 27) {
         rasterizer.Clear();
 
-        camera.set_view(eye_pos);
+        camera.set_view((trans_former::GetRotation(angle_y) *
+                         trans_former::GetTranslation(0, 0, z_translation) *
+                         eye_pos).head<3>());
         camera.set_projection(45, 1, 0.1, 6);
 
         rasterizer.Draw(camera, mesh);
@@ -59,6 +62,21 @@ int main(int argc, const char **argv) {
         key = cv::waitKey(10);
 
         std::cout << "frame count: " << frame_count++ << '\n';
+
+        switch (key) {
+            case 'w':
+                z_translation -= .1;
+                break;
+            case 's':
+                z_translation += .1;
+                break;
+            case 'a':
+                angle_y -= 5;
+                break;
+            case 'd':
+                angle_y += 5;
+                break;
+        }
     }
 
     return 0;
