@@ -29,6 +29,8 @@ public:
 
     void Show();
 
+    void Save();
+
 protected:
     int width_, height_;
     float near_, far_;

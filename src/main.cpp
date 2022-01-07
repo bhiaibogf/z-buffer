@@ -76,6 +76,13 @@ int main(int argc, const char **argv) {
             case 'd':
                 angle_y += 5;
                 break;
+            case 'r':
+                angle_y = 0;
+                z_translation = 0;
+                break;
+            case 'v':
+                rasterizer.Save();
+                break;
         }
     }
 
