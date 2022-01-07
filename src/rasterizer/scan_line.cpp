@@ -68,6 +68,9 @@ void ScanLine::FragmentShader() {
             // std::cout << active_edge.l() << ' ' << active_edge.r() << std::endl;
             float z = 1;
             for (int x = active_edge.l(); x <= active_edge.r(); x++) {
+                if (x < 0 || x >= width_) {
+                    continue;
+                }
                 if (z == 1) {
                     z = active_edge.z();
                 } else {
