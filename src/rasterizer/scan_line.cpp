@@ -5,20 +5,24 @@
 #include "scan_line.h"
 
 ScanLine::ScanLine(int width, int height) : Rasterizer(width, height) {
-    polygon_list_.resize(height_);
-    edge_list_.resize(height_);
+    polygon_table_.resize(height_);
+    edge_table_.resize(height_);
 
     depth_buffer_.resize(width_);
     fragment_buffer_.resize(width_ * height_);
 }
 
 void ScanLine::Clear() {
-    for (auto &polygon_list: polygon_list_) {
+    for (auto &polygon_list: polygon_table_) {
         polygon_list.clear();
     }
-    for (auto &edge_list: edge_list_) {
+    for (auto &edge_list: edge_table_) {
         edge_list.clear();
     }
+    active_polygon_list_.clear();
+    active_edge_list_.clear();
+
+    Polygon::Reset();
 
     std::fill(depth_buffer_.begin(), depth_buffer_.end(), 1.f);
     std::fill(fragment_buffer_.begin(), fragment_buffer_.end(), 1.f);
@@ -32,7 +36,7 @@ void ScanLine::FragmentShader() {
 
         for (auto &active_edge: active_edge_list_) {
             if (active_edge.NeedUpdate()) {
-                for (auto &edge: edge_list_[y]) {
+                for (auto &edge: edge_table_[y]) {
                     if (edge.id() == active_edge.id()) {
                         active_edge.UpdateEdge(edge);
                     }
@@ -40,11 +44,11 @@ void ScanLine::FragmentShader() {
             }
         }
 
-        for (auto &polygon: polygon_list_[y]) {
+        for (auto &polygon: polygon_table_[y]) {
             active_polygon_list_.push_back(polygon);
             Edge active_edges[2];
             int cnt = 0;
-            for (auto &edge: edge_list_[y]) {
+            for (auto &edge: edge_table_[y]) {
                 if (edge.id() == polygon.id()) {
                     active_edges[cnt++] = edge;
                 }
@@ -85,19 +89,17 @@ void ScanLine::FragmentShader() {
 }
 
 void ScanLine::CreatTable() {
-    Polygon::Reset();
-
     // int polygon_cnt = 0, edge_cnt = 0;
     for (auto &triangle: mesh_.Triangles()) {
         Polygon polygon(triangle);
         if (polygon.NeedDraw(height_)) {
-            polygon_list_[polygon.min_y()].push_back(polygon);
+            polygon_table_[polygon.min_y()].push_back(polygon);
             // polygon_cnt++;
             auto &vertices = triangle.vertices();
             for (int i = 0; i < vertices.size(); i++) {
                 Edge edge(polygon.id(), vertices[i], vertices[(i + 1) % vertices.size()]);
                 if (edge.NeedDraw(height_)) {
-                    edge_list_[edge.min_y()].push_back(edge);
+                    edge_table_[edge.min_y()].push_back(edge);
                     // edge_cnt++;
                 }
             }
@@ -105,9 +107,6 @@ void ScanLine::CreatTable() {
     }
     // std::cout << polygon_cnt << std::endl;
     // std::cout << edge_cnt << std::endl;
-
-    active_polygon_list_.clear();
-    active_edge_list_.clear();
 }
 
 void ScanLine::UpdateActiveEdgeList() {

@@ -24,8 +24,8 @@ public:
     void FragmentShader() override;
 
 private:
-    std::vector<std::vector<Polygon>> polygon_list_;
-    std::vector<std::vector<Edge>> edge_list_;
+    std::vector<std::vector<Polygon>> polygon_table_;
+    std::vector<std::vector<Edge>> edge_table_;
 
     std::vector<Polygon> active_polygon_list_;
     std::vector<ActiveEdge> active_edge_list_;
