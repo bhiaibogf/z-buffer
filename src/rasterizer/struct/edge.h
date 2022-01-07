@@ -20,9 +20,9 @@ public:
 
     int id() const { return id_; }
 
-    int min_y() const { return int(vertex_.y()); }
+    int min_y() const { return int(std::max(vertex_.y(), 0.f)); }
 
-    bool NeedDraw() { return line_ > 0; }
+    bool NeedDraw(int height) const { return line_ > 0 && min_y() < height; }
 
     float z() const { return vertex_.z(); }
 

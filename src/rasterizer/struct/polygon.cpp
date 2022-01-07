@@ -16,6 +16,8 @@ Polygon::Polygon(const Triangle &triangle) {
         max_y = std::max(max_y, vertex.y());
         min_y = std::min(min_y, vertex.y());
     }
+    min_y = std::max(min_y, 0.f);
+
     line_ = int(max_y) - int(min_y);
     min_y_ = min_y;
 }

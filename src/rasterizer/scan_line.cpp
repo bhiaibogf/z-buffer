@@ -90,13 +90,13 @@ void ScanLine::CreatTable() {
     // int polygon_cnt = 0, edge_cnt = 0;
     for (auto &triangle: mesh_.Triangles()) {
         Polygon polygon(triangle);
-        if (polygon.NeedDraw()) {
+        if (polygon.NeedDraw(height_)) {
             polygon_list_[polygon.min_y()].push_back(polygon);
             // polygon_cnt++;
             auto &vertices = triangle.vertices();
             for (int i = 0; i < vertices.size(); i++) {
                 Edge edge(polygon.id(), vertices[i], vertices[(i + 1) % vertices.size()]);
-                if (edge.NeedDraw()) {
+                if (edge.NeedDraw(height_)) {
                     edge_list_[edge.min_y()].push_back(edge);
                     // edge_cnt++;
                 }
