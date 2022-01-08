@@ -15,20 +15,25 @@ int main() {
     Eigen::Vector4f eye_pos = {0, 0, 4, 1};
     Camera camera;
 
-    // bunny
-    Mesh mesh = obj_loader::LoadObj("model/bunny/bunny.obj");
-    mesh.set_model(trans_former::GetTranslation(0, -1, 0) *
+    Mesh mesh = obj_loader::LoadObj("model/bunny_69k.obj");
+    mesh.set_model(trans_former::GetTranslation(0, -0.3, 0) *
                    trans_former::GetRotation(15) *
-                   trans_former::GetScale(10, 10, 10));
+                   trans_former::GetScale(0.5, 0.5, 0.5));
+
+    // bunny
+    // Mesh mesh = obj_loader::LoadObj("model/bunny.obj");
+    // mesh.set_model(trans_former::GetTranslation(0, -1, 0) *
+    //                trans_former::GetRotation(15) *
+    //                trans_former::GetScale(10, 10, 10));
 
     // spot
-    // Mesh mesh = obj_loader::LoadObj("model/spot/spot_triangulated_good.obj");
+    // Mesh mesh = obj_loader::LoadObj("model/spot.obj");
     // mesh.set_model(trans_former::GetTranslation() *
     //                trans_former::GetRotation(140.f) *
     //                trans_former::GetScale(1.5, 1.5, 1.5));
 
     // cube
-    // Mesh mesh = obj_loader::LoadObj("model/cube/cube.obj");
+    // Mesh mesh = obj_loader::LoadObj("model/cube.obj");
     // mesh.set_model(trans_former::GetTranslation(0, 0, 0) *
     //                trans_former::GetRotation(15) *
     //                trans_former::GetScale(0.5, 0.5, 0.5));
