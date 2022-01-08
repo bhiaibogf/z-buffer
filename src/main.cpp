@@ -9,8 +9,8 @@
 #include "rasterizer/scan_line.h"
 
 int main(int argc, const char **argv) {
-    // Vanilla rasterizer(512, 512);
-    ScanLine rasterizer(512, 512);
+    Vanilla rasterizer(512, 512);
+    // ScanLine rasterizer(512, 512);
 
     Eigen::Vector4f eye_pos = {0, 0, 4, 1};
     Camera camera;
@@ -49,6 +49,7 @@ int main(int argc, const char **argv) {
     int key = 0;
     int frame_count = 0;
     float angle_y = 0, z_translation = 0;
+    bool show_depth = true;
     while (key != 27) {
         rasterizer.Clear();
 
@@ -58,7 +59,7 @@ int main(int argc, const char **argv) {
         camera.set_projection(45, 1, 0.1, 6);
 
         rasterizer.Draw(camera, mesh);
-        rasterizer.Show();
+        rasterizer.Show(show_depth);
         key = cv::waitKey(10);
 
         std::cout << "frame count: " << frame_count++ << '\n';
@@ -81,7 +82,12 @@ int main(int argc, const char **argv) {
                 z_translation = 0;
                 break;
             case 'v':
-                rasterizer.Save();
+                rasterizer.Save(show_depth);
+                break;
+            case 'c':
+                show_depth = !show_depth;
+                break;
+            default:
                 break;
         }
     }

@@ -8,15 +8,11 @@ Vanilla::Vanilla(int width, int height) : Rasterizer(width, height) {
     depth_buffer_.resize(width * height);
 }
 
-void Vanilla::Clear() {
-    std::fill(depth_buffer_.begin(), depth_buffer_.end(), 1.f);
-}
-
 void Vanilla::FragmentShader() {
     for (auto &triangle: mesh_.Triangles()) {
         RasterizeTriangle(triangle);
     }
-    fragment_buffer_ = depth_buffer_;
+    depth_map_ = depth_buffer_;
 }
 
 bool Vanilla::IsInsideTriangle(float x, float y, const std::array<Eigen::Vector4f, 3> &vertices) {
@@ -88,6 +84,7 @@ void Vanilla::RasterizeTriangle(const Triangle &triangle) {
 
                 if (z_interpolated < depth_buffer_[GetIdx(x, y)]) {
                     depth_buffer_[GetIdx(x, y)] = z_interpolated;
+                    fragment_buffer_[GetIdx(x, y)] = triangle.color();
                 }
             }
         }

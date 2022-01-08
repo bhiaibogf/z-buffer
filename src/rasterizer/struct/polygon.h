@@ -24,6 +24,8 @@ public:
 
     Eigen::Vector3f normal() const { return normal_; }
 
+    Eigen::Vector3f color() const { return color_; }
+
     static void Reset() { id_cnt_ = 0; }
 
     bool NeedDraw(int height) const { return line_ > 0 && min_y() < height; }
@@ -38,12 +40,11 @@ private:
     int id_;
 
     Eigen::Vector3f normal_;
+    Eigen::Vector3f color_;
 
     float min_y_;
 
     int line_;
-
-    static Eigen::Vector3f TriangleToPlane(const Triangle &triangle);
 
 };
 

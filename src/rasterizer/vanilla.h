@@ -15,8 +15,6 @@ public:
 
     ~Vanilla() = default;
 
-    void Clear() override;
-
     void FragmentShader() override;
 
 private:

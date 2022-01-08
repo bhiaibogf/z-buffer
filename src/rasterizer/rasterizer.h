@@ -19,7 +19,7 @@ public:
 
     ~Rasterizer() = default;
 
-    virtual void Clear() = 0;
+    virtual void Clear();
 
     void VertexShader(const Camera &camera, const Mesh &mesh);
 
@@ -27,9 +27,9 @@ public:
 
     void Draw(const Camera &camera, const Mesh &mesh);
 
-    void Show();
+    void Show(bool show_depth);
 
-    void Save();
+    void Save(bool show_depth);
 
 protected:
     int width_, height_;
@@ -38,11 +38,16 @@ protected:
     Mesh mesh_;
 
     std::vector<float> depth_buffer_;
-    std::vector<float> fragment_buffer_;
+    std::vector<float> depth_map_;
+    std::vector<Eigen::Vector3f> fragment_buffer_;
 
     int GetIdx(int x, int y) const;
 
     float LinearizeDepth(float depth) const;
+
+    cv::Mat GetDepthMap();
+
+    cv::Mat GetFragmentBuffer();
 
 };
 

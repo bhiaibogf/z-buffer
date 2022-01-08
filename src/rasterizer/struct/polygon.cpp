@@ -9,7 +9,7 @@ int Polygon::id_cnt_ = 0;
 Polygon::Polygon(const Triangle &triangle) {
     id_ = id_cnt_++;
 
-    normal_ = TriangleToPlane(triangle);
+    normal_ = triangle.GetNormal();
 
     float max_y = -std::numeric_limits<float>::infinity(), min_y = std::numeric_limits<float>::infinity();
     for (auto &vertex: triangle.vertices()) {
@@ -20,10 +20,6 @@ Polygon::Polygon(const Triangle &triangle) {
 
     line_ = int(max_y) - int(min_y);
     min_y_ = min_y;
-}
 
-Eigen::Vector3f Polygon::TriangleToPlane(const Triangle &triangle) {
-    Eigen::Vector3f a = triangle.vertices()[1].head<3>() - triangle.vertices()[0].head<3>(),
-            b = triangle.vertices()[2].head<3>() - triangle.vertices()[0].head<3>();
-    return a.cross(b).normalized();
+    color_ = triangle.color();
 }

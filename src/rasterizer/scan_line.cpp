@@ -5,14 +5,15 @@
 #include "scan_line.h"
 
 ScanLine::ScanLine(int width, int height) : Rasterizer(width, height) {
+    depth_buffer_.resize(width_);
+
     polygon_table_.resize(height_);
     edge_table_.resize(height_);
-
-    depth_buffer_.resize(width_);
-    fragment_buffer_.resize(width_ * height_);
 }
 
 void ScanLine::Clear() {
+    this->Rasterizer::Clear();
+
     for (auto &polygon_list: polygon_table_) {
         polygon_list.clear();
     }
@@ -23,9 +24,6 @@ void ScanLine::Clear() {
     active_edge_list_.clear();
 
     Polygon::Reset();
-
-    std::fill(depth_buffer_.begin(), depth_buffer_.end(), 1.f);
-    std::fill(fragment_buffer_.begin(), fragment_buffer_.end(), 1.f);
 }
 
 void ScanLine::FragmentShader() {
@@ -54,7 +52,7 @@ void ScanLine::FragmentShader() {
                 }
             }
             assert(cnt == 2);
-            active_edge_list_.emplace_back(active_edges[0], active_edges[1], polygon.normal());
+            active_edge_list_.emplace_back(active_edges[0], active_edges[1], polygon.normal(), polygon.color());
         }
 
         for (auto &active_edge: active_edge_list_) {
@@ -78,12 +76,13 @@ void ScanLine::FragmentShader() {
                 }
                 if (z < depth_buffer_[x]) {
                     depth_buffer_[x] = z;
+                    fragment_buffer_[GetIdx(x, y)] = active_edge.color();
                 }
             }
         }
 
         for (int x = 0; x < width_; x++) {
-            fragment_buffer_[GetIdx(x, y)] = depth_buffer_[x];
+            depth_map_[GetIdx(x, y)] = depth_buffer_[x];
         }
 
         UpdateActiveEdgeList();

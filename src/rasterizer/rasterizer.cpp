@@ -7,6 +7,15 @@
 Rasterizer::Rasterizer(int width, int height) : width_(width), height_(height) {
     near_ = 0.1;
     far_ = 50;
+
+    depth_map_.resize(width * height);
+    fragment_buffer_.resize(width * height);
+}
+
+void Rasterizer::Clear() {
+    std::fill(depth_buffer_.begin(), depth_buffer_.end(), 1.f);
+    std::fill(depth_map_.begin(), depth_map_.end(), 1.f);
+    std::fill(fragment_buffer_.begin(), fragment_buffer_.end(), Eigen::Vector3f({-1, -1, -1}));
 }
 
 void Rasterizer::VertexShader(const Camera &camera, const Mesh &mesh) {
@@ -42,20 +51,20 @@ void Rasterizer::Draw(const Camera &camera, const Mesh &mesh) {
     FragmentShader();
 }
 
-void Rasterizer::Show() {
-    for (auto &pixel: fragment_buffer_) {
-        pixel = (LinearizeDepth(pixel) - near_) / (far_ - near_);
-        // if (pixel != 1) {
-        //     std::cout << pixel << std::endl;
-        // }
+void Rasterizer::Show(bool show_depth) {
+    if (show_depth) {
+        cv::imshow("z-buffer", GetDepthMap());
+    } else {
+        cv::imshow("z-buffer", GetFragmentBuffer());
     }
-    cv::Mat image(height_, width_, CV_32FC1, fragment_buffer_.data());
-    cv::imshow("z-buffer", image);
 }
 
-void Rasterizer::Save() {
-    cv::Mat image(height_, width_, CV_32FC1, fragment_buffer_.data());
-    cv::imwrite("z-buffer.exr", image);
+void Rasterizer::Save(bool show_depth) {
+    if (show_depth) {
+        cv::imwrite("z-buffer(depth).exr", GetDepthMap());
+    } else {
+        cv::imwrite("z-buffer(normal).exr", GetFragmentBuffer());
+    }
 }
 
 int Rasterizer::GetIdx(int x, int y) const {
@@ -65,4 +74,23 @@ int Rasterizer::GetIdx(int x, int y) const {
 float Rasterizer::LinearizeDepth(float depth) const {
     float z = depth * 2.f - 1.f;// Back to NDC
     return (2.f * near_ * far_) / (far_ + near_ - z * (far_ - near_));
+}
+
+cv::Mat Rasterizer::GetDepthMap() {
+    for (auto &pixel: depth_map_) {
+        pixel = (LinearizeDepth(pixel) - near_) / (far_ - near_);
+    }
+    cv::Mat image(height_, width_, CV_32FC1, depth_map_.data());
+    return image;
+}
+
+cv::Mat Rasterizer::GetFragmentBuffer() {
+    for (auto &pixel: fragment_buffer_) {
+        pixel.x() = (pixel.x() + 1) / 2;
+        pixel.y() = (pixel.y() + 1) / 2;
+        pixel.z() = (pixel.z() + 1) / 2;
+    }
+    cv::Mat image(height_, width_, CV_32FC3, fragment_buffer_.data());
+    // image.convertTo(image, CV_8UC3, 1.0f);
+    return image;
 }

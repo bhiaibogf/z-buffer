@@ -10,7 +10,7 @@
 
 class ActiveEdge {
 public:
-    ActiveEdge(const Edge &edge_1, const Edge &edge_2, const Eigen::Vector3f &normal);
+    ActiveEdge(const Edge &edge_1, const Edge &edge_2, const Eigen::Vector3f &normal, const Eigen::Vector3f &color);
 
     int id() const { return id_; }
 
@@ -21,6 +21,8 @@ public:
     float z() const { return z_l_; }
 
     float dz() const { return dz_x_; }
+
+    auto color() const { return color_; };
 
     void Update();
 
@@ -39,6 +41,8 @@ private:
     float x_r_, dx_r_;
 
     float z_l_, dz_x_, dz_y_;
+
+    Eigen::Vector3f color_;
 
 };
 

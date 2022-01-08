@@ -4,7 +4,8 @@
 
 #include "active_edge.h"
 
-ActiveEdge::ActiveEdge(const Edge &edge_1, const Edge &edge_2, const Eigen::Vector3f &normal) {
+ActiveEdge::ActiveEdge(const Edge &edge_1, const Edge &edge_2,
+                       const Eigen::Vector3f &normal, const Eigen::Vector3f &color) {
     id_ = edge_1.id();
     if (edge_1 < edge_2) {
         UpdateEdge(edge_1);
@@ -15,6 +16,8 @@ ActiveEdge::ActiveEdge(const Edge &edge_1, const Edge &edge_2, const Eigen::Vect
     }
     dz_x_ = -normal.x() / normal.z();
     dz_y_ = -normal.y() / normal.z();
+
+    color_ = color;
 }
 
 void ActiveEdge::Update() {

@@ -37,5 +37,6 @@ Mesh obj_loader::LoadObj(const std::string &path) {
             continue;
         }
     }
+    mesh.GetColor();
     return mesh;
 }

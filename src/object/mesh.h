@@ -23,13 +23,11 @@ public:
 
     const auto &vertices() const { return vertices_; }
 
-    void AddVertex(const Eigen::Vector3f &vertex) {
-        vertices_.emplace_back(vertex.x(), vertex.y(), vertex.z(), 1.0);
-    }
+    void AddVertex(const Eigen::Vector3f &vertex);
 
-    void AddFace(const Eigen::Vector3i &triangle) {
-        triangles_.emplace_back(triangle.x() - 1, triangle.y() - 1, triangle.z() - 1);
-    }
+    void AddFace(const Eigen::Vector3i &triangle);
+
+    void GetColor();
 
     void Transform(const Eigen::Matrix4f &mvp) override;
 
@@ -39,6 +37,7 @@ public:
 
 private:
     std::vector<Eigen::Vector4f> vertices_;
+    std::vector<Eigen::Vector3f> colors_;
     std::vector<Eigen::Vector3i> triangles_;
 
 };
