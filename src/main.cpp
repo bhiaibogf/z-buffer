@@ -50,7 +50,11 @@ int main() {
     int frame_count = 0;
     float angle_y = 0, z_translation = 0;
     bool show_depth = true, use_scan_line = true;
+
+    puts("draw using scan line");
     while (key != 27) {
+        auto start = std::chrono::system_clock::now();
+
         vanilla.Clear();
         scan_line.Clear();
 
@@ -62,16 +66,21 @@ int main() {
         if (use_scan_line) {
             scan_line.Draw(camera, mesh);
             scan_line.Show(show_depth);
-            puts("draw using scan line");
         } else {
             vanilla.Draw(camera, mesh);
             vanilla.Show(show_depth);
-            puts("draw using normal z-buffer");
         }
-        key = cv::waitKey(10);
 
-        std::cout << "frame count: " << frame_count++ << '\n';
+        auto end = std::chrono::system_clock::now();
 
+        std::chrono::duration<double> runtime{end - start};
+
+        if (frame_count++ % 1 == 0) {
+            std::cout << "\rFPS: " << 1 / runtime.count();
+            std::cout.flush();
+        }
+
+        key = cv::waitKey(1);
         switch (key) {
             case 'w':
                 z_translation -= .1;
@@ -101,6 +110,11 @@ int main() {
                 break;
             case 'l':
                 use_scan_line = !use_scan_line;
+                if (use_scan_line) {
+                    puts("\ndraw using scan line");
+                } else {
+                    puts("\ndraw using normal z-buffer");
+                }
                 break;
             default:
                 break;
