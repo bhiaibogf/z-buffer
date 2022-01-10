@@ -22,9 +22,9 @@ public:
 
     int min_y() const { return int(std::max(vertex_.y(), 0.f)); }
 
-    bool NeedDraw(int height) const { return line_ > 0 && min_y() < height; }
-
     float z() const { return vertex_.z(); }
+
+    bool NeedDraw(int height) const { return line_ > 0 && min_y() < height; }
 
     void CopyToActiveEdge(float &x, float &dx, int &line) const;
 

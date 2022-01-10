@@ -21,7 +21,7 @@ public:
 
     auto &vertices() { return vertices_; }
 
-    const auto &vertices() const { return vertices_; }
+    auto &vertices() const { return vertices_; }
 
     void AddVertex(const Eigen::Vector3f &vertex);
 

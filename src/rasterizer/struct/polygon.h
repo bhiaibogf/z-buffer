@@ -22,9 +22,9 @@ public:
 
     int min_y() const { return min_y_; }
 
-    Eigen::Vector3f normal() const { return normal_; }
+    auto &normal() const { return normal_; }
 
-    Eigen::Vector3f color() const { return color_; }
+    auto &color() const { return color_; }
 
     static void Reset() { id_cnt_ = 0; }
 

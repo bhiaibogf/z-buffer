@@ -19,7 +19,7 @@ public:
 
     void set_model(const Eigen::Matrix4f &model) { model_ = model; }
 
-    const auto &model() const { return model_; }
+    auto &model() const { return model_; }
 
     virtual void Transform(const Eigen::Matrix4f &mvp) = 0;
 

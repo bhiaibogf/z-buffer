@@ -22,7 +22,7 @@ public:
 
     float dz() const { return dz_x_; }
 
-    auto color() const { return color_; };
+    auto &color() const { return color_; };
 
     void Update();
 

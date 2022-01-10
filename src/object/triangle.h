@@ -20,9 +20,9 @@ public:
 
     auto &vertices() { return vertices_; }
 
-    const auto &vertices() const { return vertices_; }
+    auto &vertices() const { return vertices_; }
 
-    auto color() const { return color_; }
+    auto &color() const { return color_; }
 
     static Eigen::Vector3f GetNormal(const Eigen::Vector3f &a, const Eigen::Vector3f &b, const Eigen::Vector3f &c);
 
