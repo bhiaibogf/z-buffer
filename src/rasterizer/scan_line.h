@@ -24,11 +24,11 @@ public:
     void FragmentShader() override;
 
 private:
-    std::vector<std::vector<Polygon>> polygon_table_;
-    std::vector<std::vector<Edge>> edge_table_;
+    std::vector<std::list<Polygon>> polygon_table_;
+    std::vector<std::list<Edge>> edge_table_;
 
-    std::vector<Polygon> active_polygon_list_;
-    std::vector<ActiveEdge> active_edge_list_;
+    std::list<Polygon> active_polygon_list_;
+    std::list<ActiveEdge> active_edge_list_;
 
     void CreatTable();
 
