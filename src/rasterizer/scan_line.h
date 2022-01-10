@@ -9,6 +9,7 @@
 #include <cassert>
 
 #include "rasterizer.h"
+#include "struct/line.h"
 #include "struct/polygon.h"
 #include "struct/edge.h"
 #include "struct/active_edge.h"
@@ -26,6 +27,7 @@ public:
 private:
     std::vector<std::list<Polygon>> polygon_table_;
     std::vector<std::list<Edge>> edge_table_;
+    std::vector<std::list<Line>> line_table_;
 
     std::list<Polygon> active_polygon_list_;
     std::list<ActiveEdge> active_edge_list_;

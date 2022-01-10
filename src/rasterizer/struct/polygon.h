@@ -30,6 +30,8 @@ public:
 
     bool NeedDraw(int height) const { return line_ > 0 && min_y() < height; }
 
+    bool InLine() const { return line_ == 0; }
+
     void Update() { line_--; }
 
     bool NeedDeleted() const { return line_ < 0; }

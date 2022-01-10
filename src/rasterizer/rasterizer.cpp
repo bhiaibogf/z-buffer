@@ -54,6 +54,7 @@ void Rasterizer::Draw(const Camera &camera, const Mesh &mesh) {
 void Rasterizer::Show(bool show_depth) {
     if (show_depth) {
         cv::imshow("z-buffer", GetDepthMap());
+        // std::cout << fragment_buffer_[GetIdx(268, 511 - 253)] << std::endl;
     } else {
         cv::imshow("z-buffer", GetFragmentBuffer());
     }
