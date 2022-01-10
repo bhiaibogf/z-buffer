@@ -133,7 +133,7 @@ void ScanLine::CreatTable() {
                     // edge_cnt++;
                 }
             }
-        } else if (polygon.InLine()) {
+        } else if (polygon.InLine(height_)) {
             // std::cout << "in line " << polygon.min_y() << std::endl;
             line_table_[polygon.min_y()].emplace_back(triangle, polygon.normal(), polygon.color());
         }
