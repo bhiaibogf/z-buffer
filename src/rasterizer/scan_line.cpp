@@ -32,29 +32,31 @@ void ScanLine::FragmentShader() {
     for (int y = 0; y < height_; y++) {
         std::fill(depth_buffer_.begin(), depth_buffer_.end(), 1.f);
 
+        std::map<int, ActiveEdge *> active_edge_need_update;
         for (auto &active_edge: active_edge_list_) {
             if (active_edge.NeedUpdate()) {
-                for (auto &edge: edge_table_[y]) {
-                    if (edge.id() == active_edge.id()) {
-                        active_edge.UpdateEdge(edge);
-                    }
-                }
+                active_edge_need_update[active_edge.id()] = &active_edge;
+            }
+        }
+        for (auto &edge: edge_table_[y]) {
+            if (active_edge_need_update.count(edge.id())) {
+                active_edge_need_update[edge.id()]->UpdateEdge(edge);
             }
         }
 
-        std::map<int, std::pair<Eigen::Vector3f, Eigen::Vector3f>> active_polygon_id;
+        std::map<int, std::pair<Eigen::Vector3f, Eigen::Vector3f>> new_active_polygon;
         for (auto &polygon: polygon_table_[y]) {
             active_polygon_list_.push_back(polygon);
-            active_polygon_id[polygon.id()] = {polygon.normal(), polygon.color()};
+            new_active_polygon[polygon.id()] = {polygon.normal(), polygon.color()};
         }
 
         Edge active_edges[2];
         int cnt = 0;
         for (auto &edge: edge_table_[y]) {
-            if (active_polygon_id.count(edge.id())) {
+            if (new_active_polygon.count(edge.id())) {
                 active_edges[cnt++] = edge;
                 if (cnt == 2) {
-                    auto &[normal, color] = active_polygon_id[edge.id()];
+                    auto &[normal, color] = new_active_polygon[edge.id()];
                     active_edge_list_.emplace_back(active_edges[0], active_edges[1], normal, color);
                     cnt = 0; // TODO
                 }
