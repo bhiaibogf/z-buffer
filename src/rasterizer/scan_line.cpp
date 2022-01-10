@@ -21,6 +21,9 @@ void ScanLine::Clear() {
     for (auto &edge_list: edge_table_) {
         edge_list.clear();
     }
+    for (auto &line_list: line_table_) {
+        line_list.clear();
+    }
     active_polygon_list_.clear();
     active_edge_list_.clear();
 
@@ -101,6 +104,7 @@ void ScanLine::FragmentShader() {
                 }
                 if (z < depth_buffer_[x]) {
                     depth_buffer_[x] = z;
+                    fragment_buffer_[GetIdx(x, y)] = line.color();
                 }
             }
         }
@@ -131,9 +135,7 @@ void ScanLine::CreatTable() {
             }
         } else if (polygon.InLine()) {
             // std::cout << "in line " << polygon.min_y() << std::endl;
-            line_table_[polygon.min_y()].emplace_back(triangle, polygon.normal());
-        } else {
-            // std::cout << "??" << polygon.min_y() << std::endl;
+            line_table_[polygon.min_y()].emplace_back(triangle, polygon.normal(), polygon.color());
         }
     }
     // std::cout << polygon_cnt << std::endl;

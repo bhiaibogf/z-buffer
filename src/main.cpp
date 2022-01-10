@@ -22,7 +22,7 @@ int main() {
 
     // bunny
     // Mesh mesh = obj_loader::LoadObj("model/bunny.obj");
-    // mesh.set_model(trans_former::GetTranslation(0, -1, 0) *
+    // mesh.set_model(trans_former::GetTranslation(0, -1, 0.7) *
     //                trans_former::GetRotation(15) *
     //                trans_former::GetScale(10, 10, 10));
 

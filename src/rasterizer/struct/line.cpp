@@ -4,7 +4,7 @@
 
 #include "line.h"
 
-Line::Line(const Triangle &triangle, const Eigen::Vector3f &normal) {
+Line::Line(const Triangle &triangle, const Eigen::Vector3f &normal, const Eigen::Vector3f &color) {
     l_ = std::numeric_limits<float>::infinity();
     r_ = -std::numeric_limits<float>::infinity();
     for (auto &vertex: triangle.vertices()) {
@@ -12,7 +12,8 @@ Line::Line(const Triangle &triangle, const Eigen::Vector3f &normal) {
             l_ = vertex.x();
             z_ = vertex.z();
         }
-        r_ = std::min(r_, vertex.x());
+        r_ = std::max(r_, vertex.x());
     }
     dz_ = -normal.x() / normal.z();
+    color_ = color;
 }

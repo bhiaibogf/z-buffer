@@ -10,7 +10,7 @@
 
 class Line {
 public:
-    Line(const Triangle &triangle, const Eigen::Vector3f &normal);
+    Line(const Triangle &triangle, const Eigen::Vector3f &normal, const Eigen::Vector3f &color);
 
     ~Line() = default;
 
@@ -22,9 +22,13 @@ public:
 
     float dz() const { return dz_; }
 
+    auto &color() const { return color_; }
+
 private:
     float l_, r_;
     float z_, dz_;
+
+    Eigen::Vector3f color_;
 
 };
 
