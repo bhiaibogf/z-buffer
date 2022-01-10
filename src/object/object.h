@@ -7,6 +7,7 @@
 
 
 #include <iostream>
+#include <array>
 
 #include <eigen3/Eigen/Eigen>
 
