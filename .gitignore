@@ -33,12 +33,15 @@
 *.app
 
 /.idea/
+/cmake-build-*/
 
-/cmake*/
-
-/model/
+/.vs/
+/out/
+CMakeSettings.json
 
 /test/
+
+/model/
 
 *.png
 *.exr
