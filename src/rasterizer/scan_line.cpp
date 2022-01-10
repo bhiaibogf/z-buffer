@@ -32,7 +32,7 @@ void ScanLine::FragmentShader() {
     for (int y = 0; y < height_; y++) {
         std::fill(depth_buffer_.begin(), depth_buffer_.end(), 1.f);
 
-        std::map<int, ActiveEdge *> active_edge_need_update;
+        std::unordered_map<int, ActiveEdge *> active_edge_need_update;
         for (auto &active_edge: active_edge_list_) {
             if (active_edge.NeedUpdate()) {
                 active_edge_need_update[active_edge.id()] = &active_edge;
@@ -44,7 +44,7 @@ void ScanLine::FragmentShader() {
             }
         }
 
-        std::map<int, std::pair<Eigen::Vector3f, Eigen::Vector3f>> new_active_polygon;
+        std::unordered_map<int, std::pair<Eigen::Vector3f, Eigen::Vector3f>> new_active_polygon;
         for (auto &polygon: polygon_table_[y]) {
             active_polygon_list_.push_back(polygon);
             new_active_polygon[polygon.id()] = {polygon.normal(), polygon.color()};
