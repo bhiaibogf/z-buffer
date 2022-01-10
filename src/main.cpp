@@ -22,7 +22,7 @@ int main(int argc, const char **argv) {
     //                trans_former::GetScale(1.5, 1.5, 1.5));
 
     // bunny
-    Mesh mesh = obj_loader::LoadObj("model/bunny/bunny.obj");
+    Mesh mesh = obj_loader::LoadObj("model/bunny.obj");
     mesh.set_model(trans_former::GetTranslation(0, -1, 0) *
                    trans_former::GetRotation(15) *
                    trans_former::GetScale(10, 10, 10));
@@ -48,7 +48,7 @@ int main(int argc, const char **argv) {
 
     int key = 0;
     int frame_count = 0;
-    float angle_y = 0, z_translation = 0;
+    float angle_y = 0, z_translation = -0.7;
     while (key != 27) {
         rasterizer.Clear();
 

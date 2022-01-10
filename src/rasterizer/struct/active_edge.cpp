@@ -17,16 +17,6 @@ ActiveEdge::ActiveEdge(const Edge &edge_1, const Edge &edge_2, const Eigen::Vect
     dz_y_ = -normal.y() / normal.z();
 }
 
-ActiveEdge::ActiveEdge(const Edge &edge_1, const Edge &edge_2, const Edge &edge_3, const Eigen::Vector3f &normal) {
-    if (edge_1.z() == edge_2.z()) {
-        new(this)ActiveEdge(edge_1, edge_2, normal);
-    } else if (edge_1.z() == edge_3.z()) {
-        new(this)ActiveEdge(edge_1, edge_3, normal);
-    } else {
-        new(this)ActiveEdge(edge_2, edge_3, normal);
-    }
-}
-
 void ActiveEdge::Update() {
     line_l_--;
     line_r_--;

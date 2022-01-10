@@ -7,6 +7,7 @@
 ScanLine::ScanLine(int width, int height) : Rasterizer(width, height) {
     polygon_table_.resize(height_);
     edge_table_.resize(height_);
+    line_table_.resize(height_);
 
     depth_buffer_.resize(width_);
     fragment_buffer_.resize(width_ * height_);
@@ -53,25 +54,15 @@ void ScanLine::FragmentShader() {
                     active_edges[cnt++] = edge;
                 }
             }
-            if (cnt == 2) {
-                active_edge_list_.emplace_back(active_edges[0], active_edges[1], polygon.normal());
-            } else if (cnt == 3) {
-                active_edge_list_.emplace_back(active_edges[0], active_edges[1], active_edges[2], polygon.normal());
-            } else {
-                assert(false);
-            }
+            active_edge_list_.emplace_back(active_edges[0], active_edges[1], polygon.normal());
+            assert(cnt == 2);
         }
 
         for (auto &active_edge: active_edge_list_) {
-            // debug cube (edge rank wrong when creating active edge)
-            // if (y == 175) {
-            //     if (active_edge.id() == 4) {
-            //         std::cout << active_edge.l() << ' ' << active_edge.r() << std::endl;
-            //     }
-            // }
-            // std::cout << active_edge.id() << std::endl;
-            // std::cout << active_edge.l() << ' ' << active_edge.r() << std::endl;
             float z = 1;
+            // if (y == 511 - 253) {
+            //     std::cout << active_edge.l() << ' ' << active_edge.r() << std::endl;
+            // }
             for (int x = active_edge.l(); x <= active_edge.r(); x++) {
                 if (x < 0 || x >= width_) {
                     continue;
@@ -80,6 +71,26 @@ void ScanLine::FragmentShader() {
                     z = active_edge.z();
                 } else {
                     z += active_edge.dz();
+                }
+                if (z < depth_buffer_[x]) {
+                    depth_buffer_[x] = z;
+                }
+            }
+        }
+
+        // if (y == 511 - 253) {
+        //     std::cout << line_table_[y].size() << std::endl;
+        // }
+        for (auto &line: line_table_[y]) {
+            float z = 1;
+            for (int x = line.l(); x <= line.r(); x++) {
+                if (x < 0 || x >= width_) {
+                    continue;
+                }
+                if (z == 1) {
+                    z = line.z();
+                } else {
+                    z += line.dz();
                 }
                 if (z < depth_buffer_[x]) {
                     depth_buffer_[x] = z;
@@ -106,11 +117,16 @@ void ScanLine::CreatTable() {
             auto &vertices = triangle.vertices();
             for (int i = 0; i < vertices.size(); i++) {
                 Edge edge(polygon.id(), vertices[i], vertices[(i + 1) % vertices.size()]);
-                if (polygon.InLine() || edge.NeedDraw(height_)) {
+                if (edge.NeedDraw(height_)) {
                     edge_table_[edge.min_y()].push_back(edge);
                     // edge_cnt++;
                 }
             }
+        } else if (polygon.InLine()) {
+            // std::cout << "in line " << polygon.min_y() << std::endl;
+            line_table_[polygon.min_y()].emplace_back(triangle, polygon.normal());
+        } else {
+            // std::cout << "??" << polygon.min_y() << std::endl;
         }
     }
     // std::cout << polygon_cnt << std::endl;

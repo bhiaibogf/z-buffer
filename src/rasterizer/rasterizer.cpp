@@ -50,6 +50,7 @@ void Rasterizer::Show() {
         // }
     }
     cv::Mat image(height_, width_, CV_32FC1, fragment_buffer_.data());
+    // std::cout << fragment_buffer_[GetIdx(268, 511 - 253)] << std::endl;
     cv::imshow("z-buffer", image);
 }
 
