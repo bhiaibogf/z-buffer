@@ -42,17 +42,23 @@ void ScanLine::FragmentShader() {
             }
         }
 
+        std::map<int, std::pair<Eigen::Vector3f, Eigen::Vector3f>> active_polygon_id;
         for (auto &polygon: polygon_table_[y]) {
             active_polygon_list_.push_back(polygon);
-            Edge active_edges[2];
-            int cnt = 0;
-            for (auto &edge: edge_table_[y]) {
-                if (edge.id() == polygon.id()) {
-                    active_edges[cnt++] = edge;
+            active_polygon_id[polygon.id()] = {polygon.normal(), polygon.color()};
+        }
+
+        Edge active_edges[2];
+        int cnt = 0;
+        for (auto &edge: edge_table_[y]) {
+            if (active_polygon_id.count(edge.id())) {
+                active_edges[cnt++] = edge;
+                if (cnt == 2) {
+                    auto &[normal, color] = active_polygon_id[edge.id()];
+                    active_edge_list_.emplace_back(active_edges[0], active_edges[1], normal, color);
+                    cnt = 0; // TODO
                 }
             }
-            assert(cnt == 2);
-            active_edge_list_.emplace_back(active_edges[0], active_edges[1], polygon.normal(), polygon.color());
         }
 
         for (auto &active_edge: active_edge_list_) {
