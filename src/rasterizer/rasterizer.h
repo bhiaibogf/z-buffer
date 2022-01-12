@@ -37,9 +37,12 @@ protected:
 
     Mesh mesh_;
 
+    std::vector<float> z_buffer_;
     std::vector<float> depth_buffer_;
-    std::vector<float> depth_map_;
     std::vector<Eigen::Vector3f> fragment_buffer_;
+
+    cv::Mat *depth_mat_;
+    cv::Mat *fragment_mat_;
 
     int GetIdx(int x, int y) const;
 

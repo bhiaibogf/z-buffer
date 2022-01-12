@@ -5,7 +5,7 @@
 #include "scan_line.h"
 
 ScanLine::ScanLine(int width, int height) : Rasterizer(width, height) {
-    depth_buffer_.resize(width_);
+    z_buffer_.resize(width_);
 
     polygon_table_.resize(height_);
     edge_table_.resize(height_);
@@ -34,7 +34,7 @@ void ScanLine::FragmentShader() {
     CreatTable();
 
     for (int y = 0; y < height_; y++) {
-        std::fill(depth_buffer_.begin(), depth_buffer_.end(), 1.f);
+        std::fill(z_buffer_.begin(), z_buffer_.end(), 1.f);
 
         std::unordered_map<int, ActiveEdge *> active_edge_need_update;
         for (auto &active_edge: active_edge_list_) {
@@ -78,8 +78,8 @@ void ScanLine::FragmentShader() {
                 } else {
                     z += active_edge.dz();
                 }
-                if (z < depth_buffer_[x] && z >= -1) {
-                    depth_buffer_[x] = z;
+                if (z < z_buffer_[x] && z >= -1) {
+                    z_buffer_[x] = z;
                     fragment_buffer_[GetIdx(x, y)] = active_edge.color();
                 }
             }
@@ -96,15 +96,15 @@ void ScanLine::FragmentShader() {
                 } else {
                     z += line.dz();
                 }
-                if (z < depth_buffer_[x] && z >= -1) {
-                    depth_buffer_[x] = z;
+                if (z < z_buffer_[x] && z >= -1) {
+                    z_buffer_[x] = z;
                     fragment_buffer_[GetIdx(x, y)] = line.color();
                 }
             }
         }
 
         for (int x = 0; x < width_; x++) {
-            depth_map_[GetIdx(x, y)] = depth_buffer_[x];
+            depth_buffer_[GetIdx(x, y)] = z_buffer_[x];
         }
 
         UpdateActiveEdgeList();

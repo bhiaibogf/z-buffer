@@ -5,14 +5,14 @@
 #include "vanilla.h"
 
 Vanilla::Vanilla(int width, int height) : Rasterizer(width, height) {
-    depth_buffer_.resize(width * height);
+    z_buffer_.resize(width * height);
 }
 
 void Vanilla::FragmentShader() {
     for (auto &triangle: mesh_.Triangles()) {
         RasterizeTriangle(triangle);
     }
-    depth_map_ = depth_buffer_;
+    depth_buffer_ = z_buffer_;
 }
 
 bool Vanilla::IsInsideTriangle(float x, float y, const std::array<Eigen::Vector4f, 3> &vertices) {
@@ -82,8 +82,8 @@ void Vanilla::RasterizeTriangle(const Triangle &triangle) {
                         gamma * vertices[2].z() / vertices[2].w();
                 z_interpolated /= w_interpolated_reciprocal;
 
-                if (z_interpolated < depth_buffer_[GetIdx(x, y)]) {
-                    depth_buffer_[GetIdx(x, y)] = z_interpolated;
+                if (z_interpolated < z_buffer_[GetIdx(x, y)]) {
+                    z_buffer_[GetIdx(x, y)] = z_interpolated;
                     fragment_buffer_[GetIdx(x, y)] = triangle.color();
                 }
             }
