@@ -82,6 +82,7 @@ cv::Mat Rasterizer::GetDepthMap() {
         pixel = (LinearizeDepth(pixel) - near_) / (far_ - near_);
     }
     cv::Mat image(height_, width_, CV_32FC1, depth_map_.data());
+    // image.convertTo(image, CV_8UC1, 255.0f);
     return image;
 }
 
@@ -92,6 +93,7 @@ cv::Mat Rasterizer::GetFragmentBuffer() {
         pixel.z() = (pixel.z() + 1) / 2;
     }
     cv::Mat image(height_, width_, CV_32FC3, fragment_buffer_.data());
-    // image.convertTo(image, CV_8UC3, 1.0f);
+    cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
+    // image.convertTo(image, CV_8UC3, 255.0f);
     return image;
 }
