@@ -1,10 +1,12 @@
+[TOC]
+
 ## 运行环境
 
 ### 第三方依赖
 
 `OpenCV`：用于显示与存储渲染结果
 
-`Eigen`：矩阵库，用于坐标的储存于计算
+`Eigen`：矩阵库，用于坐标的储存与计算
 
 ### Linux
 
@@ -58,8 +60,7 @@ cd z-buffer && mkdir build && cd build && cmake .. && make
 处理器	Intel(R) Core(TM) i5-9400F CPU @ 2.90GHz   2.90 GHz
 机带 RAM	16.0 GB
 
-Microsoft Visual Studio Community 2019
-Version 16.11.6
+Microsoft Visual Studio Community 2019 Version 16.11.6
 ```
 
 #### 安装依赖
@@ -70,7 +71,7 @@ vcpkg install eigen3:x64-windows opencv:x64-windows
 
 #### 获取代码/编译运行代码
 
-使用 Visual Studio 图形界面从本仓库拉取代码并打开为 Cmake 项目
+使用 Visual Studio 图形界面从本仓库拉取代码并打开为 CMake 项目
 
 ## 使用说明
 
