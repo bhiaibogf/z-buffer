@@ -78,7 +78,7 @@ void ScanLine::FragmentShader() {
                 } else {
                     z += active_edge.dz();
                 }
-                if (z < depth_buffer_[x]) {
+                if (z < depth_buffer_[x] && z >= -1) {
                     depth_buffer_[x] = z;
                     fragment_buffer_[GetIdx(x, y)] = active_edge.color();
                 }
@@ -90,16 +90,13 @@ void ScanLine::FragmentShader() {
         // }
         for (auto &line: line_table_[y]) {
             float z = 1;
-            for (int x = line.l(); x <= line.r(); x++) {
-                if (x < 0 || x >= width_) {
-                    continue;
-                }
+            for (int x = std::max(0, line.l()); x <= std::min(width_ - 1, line.r()); x++) {
                 if (z == 1) {
                     z = line.z();
                 } else {
                     z += line.dz();
                 }
-                if (z < depth_buffer_[x]) {
+                if (z < depth_buffer_[x] && z >= -1) {
                     depth_buffer_[x] = z;
                     fragment_buffer_[GetIdx(x, y)] = line.color();
                 }
