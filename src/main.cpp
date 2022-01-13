@@ -55,6 +55,7 @@ int main() {
     int frame_count = 0;
     float angle_y = 0, z_translation = 0;
     bool show_depth = true, use_scan_line = true;
+    double alpha = 0.05, fps = 0;
 
     puts("draw using scan line");
     while (key != 27) {
@@ -80,8 +81,9 @@ int main() {
 
         std::chrono::duration<double> runtime{end - start};
 
-        if (frame_count++ % 1 == 0) {
-            std::cout << "\rFPS: " << 1 / runtime.count();
+        fps = alpha / runtime.count() + (1 - alpha) * fps;
+        if (frame_count++ % 20 == 0) {
+            std::cout << "\rFPS: " << fps;
             std::cout.flush();
         }
 
