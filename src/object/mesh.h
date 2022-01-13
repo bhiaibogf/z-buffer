@@ -31,6 +31,8 @@ public:
 
     void Transform(const Eigen::Matrix4f &mvp) override;
 
+    void Count() const;
+
     std::vector<Triangle> Triangles() const;
 
     friend std::ostream &operator<<(std::ostream &output, const Mesh &mesh);

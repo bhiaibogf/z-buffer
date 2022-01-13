@@ -38,5 +38,7 @@ Mesh obj_loader::LoadObj(const std::string &path) {
         }
     }
     mesh.GetColor();
+    std::cout << path << " Loaded." << std::endl;
+    mesh.Count();
     return mesh;
 }

@@ -62,3 +62,7 @@ std::ostream &operator<<(std::ostream &output, const Mesh &mesh) {
     }
     return output;
 }
+
+void Mesh::Count() const {
+    std::cout << "Mesh has " << vertices_.size() << " points, " << triangles_.size() << " faces." << std::endl;
+}
