@@ -37,6 +37,8 @@ private:
 
     int line_;
 
+    void Clip();
+
 };
 
 

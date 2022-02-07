@@ -10,11 +10,13 @@ Edge::Edge(int id, const Eigen::Vector4f &vertex_0, const Eigen::Vector4f &verte
     if (vertex_0.y() < vertex_1.y()) {
         vertex_ = vertex_0;
         dx_ = (vertex_1.x() - vertex_0.x()) / (vertex_1.y() - vertex_0.y());
-        line_ = int(vertex_1.y()) - int(std::max(vertex_0.y(), 0.f));
+        Clip();
+        line_ = int(vertex_1.y()) - int(vertex_.y());
     } else {
         vertex_ = vertex_1;
         dx_ = (vertex_0.x() - vertex_1.x()) / (vertex_0.y() - vertex_1.y());
-        line_ = int(vertex_0.y()) - int(std::max(vertex_1.y(), 0.f));
+        Clip();
+        line_ = int(vertex_0.y()) - int(vertex_.y());
     }
 }
 
@@ -26,4 +28,13 @@ void Edge::CopyToActiveEdge(float &x, float &dx, int &line) const {
 
 bool Edge::operator<(const Edge &edge) const {
     return vertex_.x() + dx_ < edge.vertex_.x() + edge.dx_;
+}
+
+void Edge::Clip() {
+    if (vertex_.y() > 0) {
+        return;
+    }
+    float y_add = std::ceil(0.f - vertex_.y());
+    vertex_.x() += dx_ * y_add;
+    vertex_.y() += y_add;
 }
