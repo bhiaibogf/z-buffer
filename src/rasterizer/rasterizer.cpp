@@ -55,9 +55,9 @@ void Rasterizer::VertexShader(const Camera &camera, const Mesh &mesh) {
     // std::cout << mesh_ << std::endl;
 }
 
-void Rasterizer::Draw(const Camera &camera, const Mesh &mesh) {
+void Rasterizer::Draw(const Camera &camera, const Mesh &mesh, bool draw_line) {
     VertexShader(camera, mesh);
-    FragmentShader();
+    FragmentShader(draw_line);
 }
 
 void Rasterizer::Show(bool show_depth) {

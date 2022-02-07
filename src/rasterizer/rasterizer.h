@@ -23,9 +23,9 @@ public:
 
     void VertexShader(const Camera &camera, const Mesh &mesh);
 
-    virtual void FragmentShader() = 0;
+    virtual void FragmentShader(bool draw_line) = 0;
 
-    void Draw(const Camera &camera, const Mesh &mesh);
+    void Draw(const Camera &camera, const Mesh &mesh, bool draw_line = false);
 
     void Show(bool show_depth);
 

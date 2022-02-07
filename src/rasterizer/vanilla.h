@@ -15,7 +15,7 @@ public:
 
     ~Vanilla() = default;
 
-    void FragmentShader() override;
+    void FragmentShader(bool draw_line) override;
 
 private:
     static bool IsInsideTriangle(float x, float y, const std::array<Eigen::Vector4f, 3> &vertices);

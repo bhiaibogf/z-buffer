@@ -22,7 +22,7 @@ public:
 
     void Clear() override;
 
-    void FragmentShader() override;
+    void FragmentShader(bool draw_line) override;
 
 private:
     std::vector<std::list<Polygon>> polygon_table_;

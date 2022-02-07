@@ -8,7 +8,7 @@ Vanilla::Vanilla(int width, int height) : Rasterizer(width, height) {
     z_buffer_.resize(width * height);
 }
 
-void Vanilla::FragmentShader() {
+void Vanilla::FragmentShader(bool draw_line) {
     for (auto &triangle: mesh_.Triangles()) {
         RasterizeTriangle(triangle);
     }

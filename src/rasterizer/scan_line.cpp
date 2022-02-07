@@ -30,7 +30,7 @@ void ScanLine::Clear() {
     Polygon::Reset();
 }
 
-void ScanLine::FragmentShader() {
+void ScanLine::FragmentShader(bool draw_line) {
     CreatTable();
 
     for (int y = 0; y < height_; y++) {
@@ -72,7 +72,8 @@ void ScanLine::FragmentShader() {
             // if (y == 511 - 253) {
             //     std::cout << active_edge.l() << ' ' << active_edge.r() << std::endl;
             // }
-            for (int x = std::max(0, active_edge.l()); x <= std::min(width_ - 1, active_edge.r()); x++) {
+            int l = std::max(0, active_edge.l()), r = std::min(width_ - 1, active_edge.r());
+            for (int x = l; x <= r; x++) {
                 if (z == 1) {
                     z = active_edge.z();
                 } else {
@@ -80,7 +81,14 @@ void ScanLine::FragmentShader() {
                 }
                 if (z < z_buffer_[x] && z >= -1) {
                     z_buffer_[x] = z;
-                    fragment_buffer_[GetIdx(x, y)] = active_edge.color();
+                    if (draw_line) {
+                        if (l <= r) {
+                            fragment_buffer_[GetIdx(l, y)] = active_edge.color();
+                            fragment_buffer_[GetIdx(r, y)] = active_edge.color();
+                        }
+                    } else {
+                        fragment_buffer_[GetIdx(x, y)] = active_edge.color();
+                    }
                 }
             }
         }

@@ -54,7 +54,7 @@ int main() {
     int key = 0;
     int frame_count = 0;
     float angle_y = 0, z_translation = 0;
-    bool show_depth = true, use_scan_line = true;
+    bool show_depth = true, use_scan_line = true, draw_line = false;
     double alpha = 0.05, fps = 0;
 
     puts("draw using scan line");
@@ -70,7 +70,7 @@ int main() {
         camera.set_projection(45, 1, 0.1, 6);
 
         if (use_scan_line) {
-            scan_line.Draw(camera, mesh);
+            scan_line.Draw(camera, mesh, draw_line);
             scan_line.Show(show_depth);
         } else {
             vanilla.Draw(camera, mesh);
@@ -114,6 +114,9 @@ int main() {
                 break;
             case 'c':
                 show_depth = !show_depth;
+                break;
+            case 'o':
+                draw_line = !draw_line;
                 break;
             case 'l':
                 use_scan_line = !use_scan_line;
