@@ -27,7 +27,7 @@ void Edge::CopyToActiveEdge(float &x, float &dx, int &line) const {
 }
 
 bool Edge::operator<(const Edge &edge) const {
-    return vertex_.x() + dx_ < edge.vertex_.x() + edge.dx_;
+    return (vertex_.x() < edge.vertex_.x()) || ((vertex_.x() == edge.vertex_.x()) && (dx_ < edge.dx_));
 }
 
 void Edge::Clip() {
