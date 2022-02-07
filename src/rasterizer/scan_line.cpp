@@ -82,9 +82,10 @@ void ScanLine::FragmentShader(bool draw_line) {
                 if (z < z_buffer_[x] && z >= -1) {
                     z_buffer_[x] = z;
                     if (draw_line) {
-                        if (l <= r) {
-                            fragment_buffer_[GetIdx(l, y)] = active_edge.color();
-                            fragment_buffer_[GetIdx(r, y)] = active_edge.color();
+                        if (x == l || x == r) {
+                            fragment_buffer_[GetIdx(x, y)] = active_edge.color();
+                        } else {
+                            fragment_buffer_[GetIdx(x, y)] = {-1, -1, -1};
                         }
                     } else {
                         fragment_buffer_[GetIdx(x, y)] = active_edge.color();

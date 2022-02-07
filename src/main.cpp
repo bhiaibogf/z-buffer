@@ -15,6 +15,7 @@ int main() {
     Eigen::Vector4f eye_pos = {0, 0, 4, 1};
     Camera camera;
 
+    // 69k bunny
     Mesh mesh = obj_loader::LoadObj("model/bunny_69k.obj");
     mesh.set_model(trans_former::GetTranslation(0, -0.3, 0) *
                    trans_former::GetRotation(15) *
