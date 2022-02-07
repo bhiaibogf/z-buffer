@@ -78,6 +78,8 @@ void Rasterizer::Save(bool show_depth) {
 }
 
 int Rasterizer::GetIdx(int x, int y) const {
+    assert(x >= 0 && x < width_);
+    assert(y >= 0 && y < height_);
     return (height_ - y - 1) * width_ + x;
 }
 

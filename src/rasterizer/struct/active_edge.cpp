@@ -16,6 +16,8 @@ ActiveEdge::ActiveEdge(const Edge &edge_1, const Edge &edge_2,
     }
     dz_x_ = -normal.x() / normal.z();
     dz_y_ = -normal.y() / normal.z();
+    assert(abs(dz_x_) < 1e2);
+    assert(abs(dz_y_) < 1e2);
 
     color_ = color;
 }

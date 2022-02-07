@@ -15,5 +15,6 @@ Line::Line(const Triangle &triangle, const Eigen::Vector3f &normal, const Eigen:
         r_ = std::max(r_, vertex.x());
     }
     dz_ = -normal.x() / normal.z();
+    assert(abs(dz_) < 1e2);
     color_ = color;
 }
