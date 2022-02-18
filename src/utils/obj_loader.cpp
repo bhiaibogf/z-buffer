@@ -6,8 +6,11 @@
 
 Mesh obj_loader::LoadObj(const std::string &path) {
     Mesh mesh;
-    std::ifstream obj_stream;
-    obj_stream.open(path);
+    std::ifstream obj_stream(path);
+    if (!obj_stream) {
+        std::cerr << "Error: Cannot open file " << path << std::endl;
+        return mesh;
+    }
 
     std::string line;
     while (getline(obj_stream, line)) {
