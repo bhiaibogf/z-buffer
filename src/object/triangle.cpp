@@ -42,3 +42,9 @@ std::ostream &operator<<(std::ostream &output, const Triangle &triangle) {
     }
     return output;
 }
+
+void Triangle::Update(const Eigen::Vector4f &a, const Eigen::Vector4f &b, const Eigen::Vector4f &c) {
+    vertices_[0] = a;
+    vertices_[1] = b;
+    vertices_[2] = c;
+}

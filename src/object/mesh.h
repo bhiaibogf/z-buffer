@@ -33,14 +33,19 @@ public:
 
     void Count() const;
 
-    std::vector<Triangle> Triangles() const;
+    std::vector<Triangle> Triangles();
+
+    std::vector<Triangle> Triangles() const {
+        return triangles_;
+    }
 
     friend std::ostream &operator<<(std::ostream &output, const Mesh &mesh);
 
 private:
     std::vector<Eigen::Vector4f> vertices_;
     std::vector<Eigen::Vector3f> colors_;
-    std::vector<Eigen::Vector3i> triangles_;
+    std::vector<Eigen::Vector3i> triangle_indices_;
+    std::vector<Triangle> triangles_;
 
 };
 

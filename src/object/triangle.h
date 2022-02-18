@@ -30,6 +30,8 @@ public:
 
     void Transform(const Eigen::Matrix4f &mvp) override;
 
+    void Update(const Eigen::Vector4f &a, const Eigen::Vector4f &b, const Eigen::Vector4f &c);
+
     friend std::ostream &operator<<(std::ostream &output, const Triangle &triangle);
 
 private:
